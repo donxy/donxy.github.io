@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light" />
+<link rel="icon" href="data:," />
+<title>RGBT 论文分享笔记</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f6f2; --paper:#ffffff; --ink:#1c232e; --muted:#5b6572; --faint:#8a939f;
+  --line:#e3e1da; --line2:#d4d1c8;
+  --teal:#0e6b5e; --teal-bg:#e6f2f0; --teal-dark:#0a4f45;
+  --amber:#9a6b1f; --amber-bg:#f7efe0;
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans SC",system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:var(--teal-dark)}
+.wrap{max-width:1060px;margin:0 auto;padding:0 20px 72px}
+/* Header */
+header.site{padding:44px 0 8px}
+.kicker{font-size:13px;letter-spacing:.14em;font-weight:700;color:var(--teal);margin:0 0 10px}
+h1{font-family:"Noto Serif SC",serif;font-size:clamp(30px,5vw,44px);line-height:1.2;margin:0 0 14px;font-weight:900}
+.intro{font-size:16.5px;color:#333d4a;max-width:760px;margin:0 0 8px}
+.intro strong{color:var(--ink)}
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 6px}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 18px;min-width:118px}
+.stat b{display:block;font-size:24px;line-height:1.1}
+.stat span{font-size:13px;color:var(--muted)}
+.hownav{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}
+.hownav a{font-size:13.5px;text-decoration:none;background:var(--paper);border:1px solid var(--line2);padding:6px 12px;border-radius:999px;color:var(--ink)}
+.hownav a:hover{border-color:var(--teal);color:var(--teal-dark)}
+/* Filter bar */
+.filters{position:sticky;top:0;z-index:20;background:rgba(247,246,242,.96);backdrop-filter:blur(6px);padding:14px 0 12px;margin-top:26px;border-bottom:1px solid var(--line)}
+.filters .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.search{flex:1 1 240px;display:flex;align-items:center;gap:8px;background:var(--paper);border:1px solid var(--line2);border-radius:10px;padding:9px 12px}
+.search input{border:0;outline:0;font:inherit;font-size:15px;width:100%;background:transparent;color:var(--ink)}
+.seg{display:flex;background:var(--paper);border:1px solid var(--line2);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:transparent;font:inherit;font-size:14px;padding:9px 14px;cursor:pointer;color:var(--muted)}
+.seg button.on{background:var(--teal);color:#fff;font-weight:700}
+.tagrow{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.tagchip{border:1px solid var(--line2);background:var(--paper);border-radius:999px;padding:4px 11px;font-size:13px;cursor:pointer;color:#3a4450}
+.tagchip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.countline{font-size:13.5px;color:var(--muted);margin-top:10px}
+/* Sections */
+section.block{margin-top:44px}
+.part-head{display:flex;align-items:baseline;gap:12px;border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:6px}
+.part-head h2{font-family:"Noto Serif SC",serif;font-size:26px;margin:0}
+.part-head .n{font-size:14px;color:var(--muted)}
+.part-desc{color:var(--muted);font-size:14.5px;margin:10px 0 4px;max-width:780px}
+h3.sec{font-size:19px;margin:30px 0 4px;display:flex;align-items:baseline;gap:10px}
+h3.sec .n{font-size:13px;color:var(--faint);font-weight:500}
+h4.sub{font-size:15.5px;margin:22px 0 2px;color:var(--teal-dark)}
+.secdesc{font-size:14px;color:var(--muted);margin:2px 0 8px}
+/* Cards */
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin:12px 0}
+.card-top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+.card h5{font-size:17px;line-height:1.45;margin:0;font-weight:700}
+.card h5 a{color:var(--ink);text-decoration:none}
+.card h5 a:hover{color:var(--teal-dark);text-decoration:underline}
+.meta{font-size:13.5px;color:var(--muted);margin-top:4px}
+.venue{display:inline-block;background:var(--teal-bg);color:var(--teal-dark);font-weight:700;font-size:12.5px;border-radius:6px;padding:1px 8px;margin-right:6px}
+.appendix .venue{background:var(--amber-bg);color:var(--amber)}
+.takeaway{margin:12px 0 0;font-size:15px;color:#2c3644}
+.takeaway .lbl{font-weight:700;color:var(--teal-dark);font-size:13px;letter-spacing:.04em;margin-right:6px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.tag{font-size:12px;background:#f1f0ec;color:#55606c;border-radius:999px;padding:2px 9px;cursor:pointer;border:0;font:inherit}
+.tag:hover{background:#e4e2db}
+.note{display:none;margin-top:12px;border-top:1px dashed var(--line2);padding-top:12px}
+.card.open .note{display:block}
+.note .lbl{font-weight:700;color:var(--teal-dark);font-size:13px;letter-spacing:.04em}
+.note p{margin:4px 0 0;font-size:14.5px;color:#333d4a}
+.links{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.links a{font-size:13.5px;font-weight:700;text-decoration:none;border:1px solid var(--line2);border-radius:8px;padding:6px 12px;background:#fbfaf8;color:var(--ink)}
+.links a:hover{border-color:var(--teal);color:var(--teal-dark)}
+.links .plain{font-size:13px;color:var(--muted);align-self:center}
+.expand{flex:none;border:1px solid var(--line2);background:#fbfaf8;border-radius:8px;font:inherit;font-size:13px;padding:6px 12px;cursor:pointer;color:var(--ink)}
+.expand:hover{border-color:var(--teal)}
+.empty{display:none;background:var(--paper);border:1px dashed var(--line2);border-radius:var(--radius);padding:28px;text-align:center;color:var(--muted);margin-top:20px}
+/* Datasets */
+.ds-note{font-size:13px;color:var(--muted);margin-top:10px}
+table.ds{width:100%;border-collapse:collapse;background:var(--paper);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:14px;margin-top:12px}
+table.ds th{background:#f1f0ec;text-align:left;padding:10px 12px;font-size:13px;color:#3a4450;border-bottom:1px solid var(--line2)}
+table.ds td{padding:9px 12px;border-bottom:1px solid var(--line)}
+table.ds tr:last-child td{border-bottom:0}
+table.ds td:first-child{font-weight:700}
+.robust{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-top:16px;font-size:14.5px}
+.robust p{margin:6px 0}
+footer{margin-top:56px;border-top:1px solid var(--line);padding-top:20px;font-size:13.5px;color:var(--muted)}
+@media (max-width:640px){
+  .wrap{padding:0 14px 56px}
+  header.site{padding-top:30px}
+  .card{padding:15px 16px}
+  .card-top{flex-direction:column;gap:8px}
+  .expand{align-self:flex-start}
+  /* tables become stacked rows */
+  table.ds, table.ds tbody, table.ds tr, table.ds td{display:block;width:100%}
+  table.ds thead{display:none}
+  table.ds tr{border-bottom:1px solid var(--line2);padding:8px 4px}
+  table.ds td{border:0;padding:3px 12px}
+  table.ds td::before{content:attr(data-l);display:inline-block;min-width:64px;font-size:12px;color:var(--faint);font-weight:500;margin-right:8px}
+  table.ds td:first-child{font-size:15px}
+  table.ds td:first-child::before{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="site">
+  <p class="kicker">RGB · THERMAL · OBJECT DETECTION</p>
+  <h1>RGBT 论文分享笔记</h1>
+  <p class="intro">这里分享 <strong>RGBT（可见光–热红外）目标检测</strong>方向的论文阅读笔记。每篇笔记包含一句话要点与一段点评，全部按<strong>技术路线</strong>组织：融合发生在哪一层，就归到哪一类；对齐、退化、缺失、不平衡等挑战只作为标签，不再单独设类，方便按问题横向筛选。</p>
+  <p class="intro">核心列表只收 RGBT 检测本身的工作；与之相关但不属于 RGBT 检测的通用多模态方法单列为附录，明确分区。配套的论文档案与数据集清单维护在 GitHub 仓库 <a href="https://github.com/donxy/owesome-RGBT-ObjectDetection" target="_blank" rel="noopener">owesome-RGBT-ObjectDetection</a>，两边使用同一份数据。</p>
+  <div class="stats">
+    <div class="stat"><b>42</b><span>篇笔记</span></div>
+    <div class="stat"><b>21</b><span>核心 · RGBT 检测</span></div>
+    <div class="stat"><b>21</b><span>附录 · 领域外相关工作</span></div>
+    <div class="stat"><b>23</b><span>数据集速查</span></div>
+  </div>
+  <nav class="hownav">
+    <a href="#core">核心列表</a><a href="#appendix">附录</a><a href="#datasets">数据集速查</a><a href="https://github.com/donxy/owesome-RGBT-ObjectDetection" target="_blank" rel="noopener">GitHub 仓库 ↗</a>
+  </nav>
+</header>
+
+<div class="filters" role="search">
+  <div class="row">
+    <label class="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8a939f" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="搜索标题或作者，如 DAMSDet、Mamba、Tian…" aria-label="搜索标题或作者">
+    </label>
+    <div class="seg" role="group" aria-label="列表切换">
+      <button data-seg="all" class="on">全部 42</button>
+      <button data-seg="core">核心 21</button>
+      <button data-seg="appendix">附录 21</button>
+    </div>
+  </div>
+  <div class="tagrow" id="tagrow"></div>
+  <div class="countline" id="countline"></div>
+</div>
+
+<main id="list"></main>
+<div class="empty" id="empty">没有符合当前筛选的笔记。试着清除搜索词或标签。</div>
+
+<section class="block" id="datasets">
+  <div class="part-head"><h2>数据集速查</h2><span class="n">23 个数据集 · 2 张表</span></div>
+  <p class="part-desc">RGBT 检测常用基准一览。统计数字汇编自各数据集官方页面与公开清单 Awesome-RGBT-Fusion（2026-10-25 查阅），引用前请以官方页面为准。</p>
+
+  <h3 class="sec">通用与行人检测</h3>
+  <table class="ds" id="ds1">
+    <thead><tr><th>数据集</th><th>年份</th><th>模态</th><th>图像数</th><th>类别数</th></tr></thead>
+    <tbody></tbody>
+  </table>
+
+  <h3 class="sec">航拍 / 无人机检测</h3>
+  <table class="ds" id="ds2">
+    <thead><tr><th>数据集</th><th>年份</th><th>模态</th><th>图像数</th><th>类别数</th><th>对齐</th></tr></thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="robust">
+    <p><strong>鲁棒性基准补充</strong></p>
+    <p><strong>LLVIP-C / FLIR-C</strong> — WiSE-OD 引入的 LLVIP 与 FLIR 腐蚀版本，报告 AP50 与腐蚀下平均性能（mPC）。</p>
+    <p><strong>KITTI-C / nuScenes-C / Waymo-C</strong> — 3D 检测的 27 种常见腐蚀基准（Dong et al., CVPR 2023），可作分级腐蚀评测的协议参考。</p>
+    <p><strong>MultiCorrupt</strong> — 10 种 LiDAR–相机腐蚀 × 3 个严重度，附 Resistance Ability 指标。</p>
+    <p style="color:var(--muted)">KAIST 另有社区维护的改进标注与评测工具（Liu et al. 改进测试标注、Li et al. 清洗训练标注、Zhang et al. 改进训练标注及 MATLAB 评测代码），链接见 GitHub 仓库的 datasets.md。</p>
+  </div>
+</section>
+
+<footer>
+  <p>RGBT 论文分享笔记 · 按技术路线组织：综述与基准 / 像素级融合 / 特征级融合 / 决策级与证据融合，附录为领域外相关工作。配套档案：<a href="https://github.com/donxy/owesome-RGBT-ObjectDetection" target="_blank" rel="noopener">github.com/donxy/owesome-RGBT-ObjectDetection</a>。论文链接指向 arXiv / DOI / 会议页面，代码链接指向作者仓库。</p>
+</footer>
+</div>
+
+<script>
+var PAPERS = [
+/* ===== CORE — Surveys & Benchmarks ===== */
+{list:"core",sec:"Surveys & Benchmarks",sub:"",title:"WiSE-OD",authors:"Medeiros et al.",year:"2026",venue:"WACV",paper:"https://arxiv.org/abs/2507.18925",code:"",tags:["degraded-modality","benchmark","out-of-distribution"],take:"Weight-space ensembling for OOD RGB-T detection; introduces LLVIP-C / FLIR-C.",note:"引入 LLVIP-C / FLIR-C 腐蚀基准，以 AP50 与 mPC 评估分布外鲁棒性。"},
+{list:"core",sec:"Surveys & Benchmarks",sub:"",title:"Infrared and Visible Image Fusion: From Data Compatibility to Task Adaption",authors:"Liu et al.",year:"2025",venue:"IEEE TPAMI",paper:"https://arxiv.org/abs/2501.10761",code:"",tags:["survey"],take:"Comprehensive IVIF survey organized around task adaptation.",note:"来自 TarDAL / M3FD 团队的权威综述，以任务适配为主线梳理红外–可见光融合。"},
+{list:"core",sec:"Surveys & Benchmarks",sub:"",title:"MSOD-Bench: Optimizing Multispectral Object Detection",authors:"Zhou et al.",year:"2024",venue:"arXiv",paper:"https://arxiv.org/abs/2411.18288",code:"",tags:["benchmark"],take:"Standardized re-implementation/benchmark of 20+ RGB-T detectors.",note:"在统一设置下复现 20+ 个检测器，便于公平比较，避免挑选基线数字。"},
+/* ===== CORE — Pixel-Level ===== */
+{list:"core",sec:"Pixel-Level Fusion for Detection",sub:"",title:"CDDFuse",authors:"Zhao et al.",year:"2023",venue:"CVPR",paper:"https://arxiv.org/abs/2211.14461",code:"",tags:["image-fusion","task-coupled"],take:"Correlation-driven dual-branch decomposition fusion, incl. downstream detection.",note:"任务耦合融合代表作；相关性驱动的分解式融合兼顾下游检测性能。"},
+{list:"core",sec:"Pixel-Level Fusion for Detection",sub:"",title:"MetaFusion",authors:"Zhao et al.",year:"2023",venue:"CVPR",paper:"https://doi.org/10.1109/CVPR52729.2023.01341",code:"",tags:["image-fusion","task-coupled"],take:"Detection-guided meta-feature embedding mutually promoting fusion and detection.",note:"以检测任务反向引导融合特征嵌入，融合与检测相互促进。"},
+{list:"core",sec:"Pixel-Level Fusion for Detection",sub:"",title:"TarDAL: Target-aware Dual Adversarial Learning and a Multi-scenario Multi-Modality Benchmark to Fuse Infrared and Visible for Object Detection",authors:"Liu et al.",year:"2022",venue:"CVPR",paper:"https://arxiv.org/abs/2203.16220",code:"https://github.com/JinyuanLiu-CV/TarDAL",tags:["image-fusion","task-coupled"],take:"Target-aware dual adversarial learning that fuses infrared and visible images for detection; introduced the M3FD benchmark.",note:"经典任务耦合融合工作，同时发布多场景多模态基准 M3FD。"},
+/* ===== CORE — Feature / Attention ===== */
+{list:"core",sec:"Feature-Level Fusion",sub:"Attention, Transformers & Foundation Models",title:"UniRGB-IR",authors:"Yuan et al.",year:"2025",venue:"ACM MM",paper:"https://arxiv.org/abs/2404.17360",code:"",tags:["foundation-model","adapter"],take:"Adapter injection of RGB-IR fusion into a frozen ViT foundation model.",note:"将 RGB-IR 融合以适配器形式注入冻结的 ViT 基础模型；FLIR mAP 44.1 / LLVIP 63.2。"},
+{list:"core",sec:"Feature-Level Fusion",sub:"Attention, Transformers & Foundation Models",title:"C2Former: Calibrated and Complementary Transformer",authors:"Yuan & Wei",year:"2024",venue:"IEEE TGRS",paper:"https://arxiv.org/abs/2306.16175",code:"https://github.com/yuanmaoxun/C2Former",tags:["alignment","cross-attention","transformer"],take:"Cross-attention calibration + adaptive sampling for misaligned RGB-T pairs.",note:"以跨注意力校准处理未对齐配对；在 DroneVehicle 与 KAIST 上评测。"},
+{list:"core",sec:"Feature-Level Fusion",sub:"Attention, Transformers & Foundation Models",title:"DAMSDet",authors:"Guo, Gao, Liu, Meng, Gao",year:"2024",venue:"ECCV",paper:"https://eccv.ecva.net/virtual/2024/poster/801",code:"https://github.com/gjj45/DAMSDet",tags:["transformer","detr"],take:"Competitive query selection + deformable cross-attention in a DETR RGB-T detector.",note:"DETR 路线代表作，覆盖 M3FD / FLIR / LLVIP（FLIR mAP 49.3，LLVIP mAP 69.6）。"},
+{list:"core",sec:"Feature-Level Fusion",sub:"Attention, Transformers & Foundation Models",title:"GM-DETR",authors:"Xiao et al.",year:"2024",venue:"CVPR Workshops",paper:"",paperNote:"CVPRW 2024, pp.5541–5549",code:"",tags:["transformer","detr","efficiency"],take:"Lightweight DETR-style RGB-T detector.",note:"轻量 DETR 风格检测器，在 FLIR 与 LLVIP 上提供补充结果。"},
+{list:"core",sec:"Feature-Level Fusion",sub:"Attention, Transformers & Foundation Models",title:"ICAFusion: Iterative Cross-Attention Guided Feature Fusion for Multispectral Object Detection",authors:"Shen et al.",year:"2024",venue:"Pattern Recognition",paper:"https://ieeexplore.ieee.org/abstract/document/10225383",code:"https://github.com/chanchanchan97/ICAFusion",tags:["cross-attention"],take:"Iterative cross-attention guided feature fusion for multispectral object detection.",note:"迭代跨注意力融合的代表方法，常作对比基线（LLVIP、M3FD）。"},
+{list:"core",sec:"Feature-Level Fusion",sub:"Attention, Transformers & Foundation Models",title:"Cross-Modality Fusion Transformer (CFT)",authors:"Fang, Han, Wang",year:"2021",venue:"arXiv",paper:"https://arxiv.org/abs/2111.00273",code:"",tags:["cross-attention","transformer"],take:"YOLOv5-based transformer cross-modal fusion for RGB-T detection.",note:"早期 Transformer 融合基线，基于 YOLOv5，在 FLIR + LLVIP 上被广泛对比。"},
+/* ===== CORE — Feature / Dual-Stream ===== */
+{list:"core",sec:"Feature-Level Fusion",sub:"Dual-Stream CNN & YOLO-Based Detectors",title:"YOLOv11-RGBT",authors:"Wan et al.",year:"2025",venue:"arXiv",paper:"https://arxiv.org/abs/2506.14696",code:"https://github.com/wandahangFY/YOLOv11-RGBT",tags:["yolo","efficiency"],take:"Six-fusion-mode study over YOLO/RT-DETR with P3 mid-fusion + controllable fine-tuning (MCF).",note:"系统比较六种融合方式，提出 P3 中层融合与可控微调（MCF），FLIR 上带来明显的 mAP 提升。"},
+{list:"core",sec:"Feature-Level Fusion",sub:"Dual-Stream CNN & YOLO-Based Detectors",title:"DEYOLO",authors:"Chen et al.",year:"2024",venue:"ICPR",paper:"https://arxiv.org/abs/2412.04931",code:"",tags:["yolo","dual-stream"],take:"Dual semantic/spatial enhancement modules on YOLOv8 dual streams.",note:"YOLOv8 双流 + 语义/空间双增强模块，在 M3FD + LLVIP 上评测。"},
+{list:"core",sec:"Feature-Level Fusion",sub:"Dual-Stream CNN & YOLO-Based Detectors",title:"LRAF-Net",authors:"Fu et al.",year:"2023",venue:"IEEE TNNLS",paper:"https://doi.org/10.1109/TNNLS.2023.3266452",code:"",tags:["dual-stream","modality-bias","mask-augmentation"],take:"Long-range attention fusion + complementary-mask augmentation vs single-modality bias.",note:"长程注意力融合 + 互补掩码增广，缓解单模态偏置；含 FLIR / LLVIP 结果。"},
+/* ===== CORE — Feature / Mamba ===== */
+{list:"core",sec:"Feature-Level Fusion",sub:"State-Space Models (Mamba)",title:"Fusion-Mamba",authors:"Dong et al.",year:"2025",venue:"IEEE TMM",paper:"https://doi.org/10.1109/TMM.2025.3599020",code:"",tags:["mamba","state-space"],take:"State-space (Mamba) cross-modal fusion for IR-VIS detection.",note:"状态空间路线代表作；对比表中 M3FD mAP 61.9（数字来自二次对比表，引用时留意）。"},
+{list:"core",sec:"Feature-Level Fusion",sub:"State-Space Models (Mamba)",title:"WaveMamba",authors:"Zhu et al.",year:"2025",venue:"ICCV",paper:"https://arxiv.org/abs/2507.18173",code:"https://github.com/EhanDong/WaveMamba",tags:["mamba","state-space","frequency-domain"],take:"Wavelet frequency-decomposed Mamba fusion with YOLOv8 head.",note:"小波频域分解 + Mamba 融合，配 YOLOv8 检测头，覆盖 M3FD / LLVIP / FLIR-Aligned。"},
+/* ===== CORE — Feature / Quality ===== */
+{list:"core",sec:"Feature-Level Fusion",sub:"Quality- & Conflict-Aware Fusion",title:"Learning a Robust RGB-Thermal Detector for Extreme Modality Imbalance",authors:"Tian, Yang, Zhu, Wang, He",year:"2025",venue:"Pattern Recognition Letters",paper:"https://arxiv.org/abs/2505.22154",code:"",tags:["degraded-modality","quality-aware","modality-imbalance"],take:"Quality-mask interaction + pseudo-degradation + EMA base/auxiliary consistency for imbalanced RGB-T.",note:"逐位置质量掩码调制模态特征，训练期用伪退化 + EMA 基/辅检测器一致性；在 KAIST（LAMR）与 FLIR 上评测，含高斯噪声与对比度退化实验。"},
+{list:"core",sec:"Feature-Level Fusion",sub:"Quality- & Conflict-Aware Fusion",title:"CALNet (Cross-Modal Conflict-Aware Learning)",authors:"He, Tang, Zou, Zhang",year:"2023",venue:"ACM MM",paper:"https://doi.org/10.1145/3581783.3612651",code:"",tags:["conflict-aware","aerial"],take:"Rectifies cross-modal feature conflict before selective fusion.",note:"先校正跨模态特征冲突，再做选择性融合；“冲突”视角对理解有害模态很有启发。"},
+/* ===== CORE — Decision ===== */
+{list:"core",sec:"Decision-Level & Evidential Fusion",sub:"",title:"Confidence-Aware Fusion via Dempster–Shafer (CMPD)",authors:"Li, Zhang, Hu, Fu, Zhu",year:"2023",venue:"IEEE TMM",paper:"",paperNote:"IEEE TMM 25:3420–3431",code:"",tags:["evidential","decision-level","pedestrian"],take:"Per-modality confidence subnetworks combined evidentially for pedestrian detection.",note:"RGBT 行人检测中置信度加权融合的代表：逐模态置信子网络 + Dempster–Shafer 证据组合。"},
+{list:"core",sec:"Decision-Level & Evidential Fusion",sub:"",title:"ProbEn",authors:"Chen, Shi, Ye, Mertz, Ramanan, Kong",year:"2022",venue:"ECCV",paper:"https://arxiv.org/abs/2104.02904",code:"",tags:["missing-modality","decision-level","ensemble","pedestrian"],take:"Probabilistic late ensembling; marginalization handles missing modalities natively.",note:"概率式后期集成，边缘化天然处理模态缺失；在 KAIST + FLIR 上评测，是检测原生缺失模态方法的代表。"},
+/* ===== APPENDIX — Robust & Dynamic ===== */
+{list:"appendix",sec:"Robust & Dynamic Fusion (General Multimodal)",sub:"",title:"MoME: Resilient Sensor Fusion via Multi-Modal Expert Fusion",authors:"Park, Kim, Kim, Choi",year:"2025",venue:"CVPR",paper:"https://arxiv.org/abs/2503.19776",code:"",tags:["expert-routing","degraded-modality","lidar-camera"],take:"Per-query routing among camera/LiDAR/fused experts by local feature quality.",note:"按局部特征质量逐查询路由相机 / LiDAR / 融合专家；自动驾驶 3D 场景，训练使用合成传感器丢弃增广。"},
+{list:"appendix",sec:"Robust & Dynamic Fusion (General Multimodal)",sub:"",title:"MEFormer",authors:"Cha et al.",year:"2024",venue:"arXiv",paper:"https://arxiv.org/abs/2407.19156",code:"",tags:["negative-fusion","degraded-modality"],take:"Defines and mitigates “negative fusion” from defective modalities.",note:"提出并命名“负融合（negative fusion）”：有缺陷模态的信息反噬另一模态的正确信息；以模态无关解码与近邻集成缓解。"},
+{list:"appendix",sec:"Robust & Dynamic Fusion (General Multimodal)",sub:"",title:"Multimodal Fusion on Low-quality Data: A Comprehensive Survey",authors:"Zhang et al.",year:"2024",venue:"arXiv",paper:"https://arxiv.org/abs/2404.18947",code:"",tags:["survey","low-quality-data","missing-modality"],take:"Taxonomy separating noisy, incomplete, imbalanced, quality-varying multimodal data.",note:"将低质量多模态数据分为噪声、不完整、不平衡、质量变化四类分别讨论，是区分“腐蚀”与“缺失”的清晰分类参考。"},
+{list:"appendix",sec:"Robust & Dynamic Fusion (General Multimodal)",sub:"",title:"DynMM",authors:"Xue & Marculescu",year:"2023",venue:"CVPR Workshops",paper:"https://arxiv.org/abs/2204.00102",code:"",tags:["dynamic-fusion","efficiency"],take:"On-the-fly gating over modality and fusion-level computation paths.",note:"推理时动态门控模态与融合层级路径，以效率为主要动机的动态融合先例。"},
+{list:"appendix",sec:"Robust & Dynamic Fusion (General Multimodal)",sub:"",title:"Provable Dynamic Fusion for Low-Quality Multimodal Data (QMF)",authors:"Zhang et al.",year:"2023",venue:"ICML",paper:"https://arxiv.org/abs/2306.02050",code:"",tags:["quality-aware","low-quality-data"],take:"Energy-based uncertainty drives dynamic decision-level fusion weights, with guarantees.",note:"质量感知融合的代表方法：以能量不确定性驱动决策级动态权重，并给出理论保证；任务为分类。"},
+{list:"appendix",sec:"Robust & Dynamic Fusion (General Multimodal)",sub:"",title:"Trusted Multi-View Classification (TMC)",authors:"Han, Zhang, Fu, Zhou",year:"2021",venue:"ICLR",paper:"https://arxiv.org/abs/2102.02051",code:"",tags:["evidential","trusted-fusion"],take:"Evidential per-view quality assessment with Dempster–Shafer fusion.",note:"可信多视图融合奠基工作：逐视图证据质量评估 + Dempster–Shafer 组合。"},
+/* ===== APPENDIX — Corruption Benchmarks ===== */
+{list:"appendix",sec:"Corruption Robustness Benchmarks (Driving / 3D)",sub:"",title:"SB-BEVFusion",authors:"Essl et al.",year:"2026",venue:"arXiv (ICIP 2026)",paper:"https://arxiv.org/abs/2605.11799",code:"",tags:["corrupted-vs-missing","lidar-camera"],take:"BEV fusion explicitly treating corrupted vs missing sensors as distinct cases.",note:"在 BEV 融合中明确区分传感器腐蚀与传感器缺失两种情形；相机–LiDAR 场景，较新的工作。"},
+{list:"appendix",sec:"Corruption Robustness Benchmarks (Driving / 3D)",sub:"",title:"MultiCorrupt",authors:"Beemelmanns, Zhang, Eckstein",year:"2024",venue:"IEEE IV",paper:"https://arxiv.org/abs/2402.11677",code:"",tags:["benchmark","corruption"],take:"10 LiDAR-camera corruptions × 3 severities with Resistance Ability metric.",note:"10 种腐蚀 × 3 个严重度，并提出 Resistance Ability 指标，是分级腐蚀评测的参考模型。"},
+{list:"appendix",sec:"Corruption Robustness Benchmarks (Driving / 3D)",sub:"",title:"Benchmarking Robustness of 3D Object Detection to Common Corruptions",authors:"Dong et al.",year:"2023",venue:"CVPR",paper:"https://arxiv.org/abs/2303.11040",code:"",tags:["benchmark","corruption"],take:"27-corruption benchmark; fusion models more robust, motion corruptions worst.",note:"27 种常见腐蚀基准（KITTI-C / nuScenes-C / Waymo-C）；结论：融合模型整体更鲁棒，运动类腐蚀最难。"},
+/* ===== APPENDIX — Imbalance & Missing ===== */
+{list:"appendix",sec:"Modality Imbalance & Missing-Modality Learning (General)",sub:"",title:"MM-CKD",authors:"Sang, Funakoshi, Okumura",year:"2024",venue:"arXiv",paper:"https://arxiv.org/abs/2410.08692",code:"",tags:["missing-modality","distillation"],take:"Cross-modal knowledge distillation robust to missing modality (sentiment).",note:"面向模态缺失的跨模态知识蒸馏；在情感分析任务上验证，非视觉领域。"},
+{list:"appendix",sec:"Modality Imbalance & Missing-Modality Learning (General)",sub:"",title:"MMPareto",authors:"Wei & Hu",year:"2024",venue:"ICML",paper:"https://arxiv.org/abs/2405.17730",code:"",tags:["modality-imbalance","gradient-conflict"],take:"Pareto-integrated gradients resolving multimodal/unimodal gradient conflict.",note:"以 Pareto 方式整合多模态与单模态梯度，缓解梯度冲突。"},
+{list:"appendix",sec:"Modality Imbalance & Missing-Modality Learning (General)",sub:"",title:"Multimodal Learning with Missing Modalities: A Survey",authors:"Wu, Wang, Chen",year:"2024",venue:"arXiv (TMLR)",paper:"https://arxiv.org/abs/2409.07825",code:"",tags:["survey","missing-modality"],take:"Survey of imputation/representation/distillation approaches to missing modalities.",note:"系统梳理模态缺失学习的三条路线：插补、表征、蒸馏。"},
+{list:"appendix",sec:"Modality Imbalance & Missing-Modality Learning (General)",sub:"",title:"ReconBoost",authors:"Hua, Xu, Bao, Yang, Huang",year:"2024",venue:"ICML",paper:"https://proceedings.mlr.press/v235/hua24a.html",code:"",tags:["modality-imbalance","modality-competition"],take:"Modality-alternating boosting with KL reconcilement vs competition.",note:"模态交替 boosting + KL 协调项，针对模态竞争问题的较新方法。"},
+{list:"appendix",sec:"Modality Imbalance & Missing-Modality Learning (General)",sub:"",title:"PMR: Prototypical Modal Rebalance",authors:"Fan, Xu, Wang, Wang, Guo",year:"2023",venue:"CVPR",paper:"https://doi.org/10.1109/CVPR52729.2023.01918",code:"",tags:["modality-imbalance"],take:"Prototypes accelerate the slow-learning modality; entropy regularizer vs dominant modality.",note:"用原型加速慢学习模态，并以熵正则抑制主导模态，是平衡路线的代表。"},
+{list:"appendix",sec:"Modality Imbalance & Missing-Modality Learning (General)",sub:"",title:"ShaSpec",authors:"Wang et al.",year:"2023",venue:"CVPR",paper:"https://arxiv.org/abs/2307.14126",code:"",tags:["missing-modality"],take:"Shared-specific features + residual fusion for missing modality at train/test.",note:"共享–特有特征分解 + 残差融合，训练与测试阶段均可应对模态缺失（医学分割与分类）。"},
+{list:"appendix",sec:"Modality Imbalance & Missing-Modality Learning (General)",sub:"",title:"OGM-GE",authors:"Peng, Wei, Deng, Wang, Hu",year:"2022",venue:"CVPR (Oral)",paper:"https://arxiv.org/abs/2203.15332",code:"",tags:["modality-imbalance","gradient-modulation"],take:"On-the-fly gradient modulation by modality contribution discrepancy.",note:"按模态贡献差异在线调制梯度，是模态不平衡的标准基线方法。"},
+{list:"appendix",sec:"Modality Imbalance & Missing-Modality Learning (General)",sub:"",title:"SMIL",authors:"Ma et al.",year:"2021",venue:"AAAI",paper:"https://arxiv.org/abs/2103.05677",code:"",tags:["missing-modality"],take:"Bayesian meta-learning for severely (≤90%) missing modalities.",note:"贝叶斯元学习重构缺失模态表征，可应对高达 90% 的不完整数据，是缺失模态的经典方法。"},
+/* ===== APPENDIX — Test-Time ===== */
+{list:"appendix",sec:"Test-Time Adaptation, Intervention & Amortized Optimization",sub:"",title:"Inference-Time Intervention (ITI)",authors:"Li, Patel, Viégas, Pfister, Wattenberg",year:"2023",venue:"NeurIPS Spotlight",paper:"https://arxiv.org/abs/2306.03341",code:"",tags:["test-time-intervention"],take:"Shifts selected attention-head activations along probed directions at inference.",note:"在推理时沿探查方向平移选定注意力头的激活，并显式讨论干预强度的权衡；大语言模型场景。"},
+{list:"appendix",sec:"Test-Time Adaptation, Intervention & Amortized Optimization",sub:"",title:"MEMO",authors:"Zhang, Levine, Finn",year:"2022",venue:"NeurIPS",paper:"https://arxiv.org/abs/2110.09506",code:"",tags:["test-time-adaptation"],take:"Per-test-point adaptation via marginal entropy over augmentations.",note:"对单个测试样本，基于其增广视图的边缘熵做测试时适配。"},
+{list:"appendix",sec:"Test-Time Adaptation, Intervention & Amortized Optimization",sub:"",title:"Tent",authors:"Wang, Shelhamer, Liu, Olshausen, Darrell",year:"2021",venue:"ICLR",paper:"https://arxiv.org/abs/2006.10726",code:"",tags:["test-time-adaptation"],take:"Test-time entropy minimization over norm affine parameters.",note:"测试时适配的经典方法：仅通过熵最小化更新归一化层仿射参数，无需标签。"},
+{list:"appendix",sec:"Test-Time Adaptation, Intervention & Amortized Optimization",sub:"",title:"OptNet",authors:"Amos & Kolter",year:"2017",venue:"ICML",paper:"https://arxiv.org/abs/1703.00443",code:"",tags:["amortized-optimization"],take:"Differentiable QP layers via implicit KKT differentiation.",note:"可微优化层的奠基工作：将二次规划作为网络层，通过 KKT 条件做隐式微分。"}
+];
+
+var SEC_ZH = {
+ "Surveys & Benchmarks":"综述与基准",
+ "Pixel-Level Fusion for Detection":"像素级融合",
+ "Feature-Level Fusion":"特征级融合",
+ "Decision-Level & Evidential Fusion":"决策级与证据融合",
+ "Robust & Dynamic Fusion (General Multimodal)":"鲁棒与动态融合（通用多模态）",
+ "Corruption Robustness Benchmarks (Driving / 3D)":"腐蚀鲁棒性基准（驾驶 / 3D）",
+ "Modality Imbalance & Missing-Modality Learning (General)":"模态不平衡与缺失模态学习（通用）",
+ "Test-Time Adaptation, Intervention & Amortized Optimization":"测试时适配、干预与摊销优化"
+};
+var SUB_ZH = {
+ "Attention, Transformers & Foundation Models":"注意力 / Transformer 与基础模型",
+ "Dual-Stream CNN & YOLO-Based Detectors":"双流 CNN 与 YOLO 系检测器",
+ "State-Space Models (Mamba)":"状态空间模型（Mamba）",
+ "Quality- & Conflict-Aware Fusion":"质量与冲突感知融合"
+};
+var SEC_DESC = {
+ "Surveys & Benchmarks":"领域地图与统一评测：先看综述建立坐标系，再用基准核对各方法的数字口径。",
+ "Pixel-Level Fusion for Detection":"先把两模态融合成一幅图、再送检测器的一派，融合目标直接受检测任务牵引。",
+ "Feature-Level Fusion":"当前主流：双流编码后在特征层交互。按骨干与机制再分四个小节。",
+ "Decision-Level & Evidential Fusion":"各模态先出结果或置信度，再在决策层组合；对模态缺失天然友好。",
+ "Robust & Dynamic Fusion (General Multimodal)":"非 RGBT 检测领域的质量感知与动态融合方法，机制可借鉴，结论需在本领域复核。",
+ "Corruption Robustness Benchmarks (Driving / 3D)":"驾驶 / 3D 场景的腐蚀评测协议，为 RGBT 的退化评测提供参照。",
+ "Modality Imbalance & Missing-Modality Learning (General)":"通用多模态的模态竞争、平衡与缺失模态学习方法，多为分类 / 分割任务。",
+ "Test-Time Adaptation, Intervention & Amortized Optimization":"测试时适配与推理时干预的经典参照，来自其他领域，收录以便横向对照。"
+};
+
+var state = { q:"", seg:"all", tag:"" };
+
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;");}
+function matches(p){
+  if(state.seg!=="all" && p.list!==state.seg) return false;
+  if(state.tag && p.tags.indexOf(state.tag)<0) return false;
+  if(state.q){
+    var h=(p.title+" "+p.authors).toLowerCase();
+    if(h.indexOf(state.q.toLowerCase())<0) return false;
+  }
+  return true;
+}
+function cardHTML(p){
+  var title = p.paper ? '<a href="'+p.paper+'" target="_blank" rel="noopener">'+esc(p.title)+'</a>' : esc(p.title);
+  var tags = p.tags.map(function(t){return '<button class="tag" data-tag="'+t+'">'+t+'</button>';}).join("");
+  var links = "";
+  if(p.paper) links += '<a href="'+p.paper+'" target="_blank" rel="noopener">论文 Paper ↗</a>';
+  if(p.paperNote) links += '<span class="plain">'+esc(p.paperNote)+'</span>';
+  if(p.code) links += '<a href="'+p.code+'" target="_blank" rel="noopener">代码 Code ↗</a>';
+  if(!p.code) links += '<span class="plain">代码：未收录公开链接</span>';
+  return '<article class="card">'
+    + '<div class="card-top"><div><h5>'+title+'</h5>'
+    + '<div class="meta"><span class="venue">'+esc(p.venue)+' · '+p.year+'</span>'+esc(p.authors)+'</div></div>'
+    + '<button class="expand" aria-expanded="false">展开笔记</button></div>'
+    + '<p class="takeaway"><span class="lbl">一句话要点</span>'+esc(p.take)+'</p>'
+    + '<div class="tags">'+tags+'</div>'
+    + '<div class="note"><span class="lbl">笔记 / 点评</span><p>'+esc(p.note)+'</p>'
+    + '<div class="links">'+links+'</div></div></article>';
+}
+function render(){
+  var main = document.getElementById("list");
+  var html = "", shown = 0;
+  var parts = [
+    {id:"core", list:"core", name:"核心列表 · RGBT 目标检测", desc:"只收 RGBT（可见光–热红外）目标检测本身的工作，按融合发生的层级组织：综述与基准 → 像素级 → 特征级 → 决策级。"},
+    {id:"appendix", list:"appendix", name:"附录 · 领域外相关工作", desc:"以下工作不属于 RGBT 检测（通用多模态、驾驶 3D、医学、语言模型等），因其机制或评测协议与 RGBT 检测密切相关而收录，与核心列表明确分区。"}
+  ];
+  parts.forEach(function(part){
+    var secs = [];
+    PAPERS.forEach(function(p){ if(p.list===part.list && secs.indexOf(p.sec)<0) secs.push(p.sec); });
+    var partHTML = "";
+    secs.forEach(function(sec){
+      var inSec = PAPERS.filter(function(p){return p.list===part.list && p.sec===sec;});
+      var subs = [];
+      inSec.forEach(function(p){ if(subs.indexOf(p.sub)<0) subs.push(p.sub); });
+      var secHTML = "", secCount = 0;
+      subs.forEach(function(sub){
+        var cards = "";
+        inSec.forEach(function(p){ if(p.sub===sub && matches(p)){ cards += cardHTML(p); secCount++; } });
+        if(cards){
+          if(sub) secHTML += '<h4 class="sub">'+esc(SUB_ZH[sub]||sub)+'</h4>';
+          secHTML += cards;
+        }
+      });
+      if(secHTML){
+        partHTML += '<h3 class="sec">'+esc(SEC_ZH[sec]||sec)+' <span class="n">'+sec+' · '+secCount+' 篇</span></h3>'
+          + '<p class="secdesc">'+esc(SEC_DESC[sec]||"")+'</p>' + secHTML;
+      }
+    });
+    if(partHTML){
+      var total = PAPERS.filter(function(p){return p.list===part.list;}).length;
+      html += '<section class="block '+(part.list==="appendix"?"appendix":"")+'" id="'+part.id+'">'
+        + '<div class="part-head"><h2>'+part.name+'</h2><span class="n">共 '+total+' 篇</span></div>'
+        + '<p class="part-desc">'+part.desc+'</p>' + partHTML + '</section>';
+    }
+    shown += PAPERS.filter(function(p){return p.list===part.list && matches(p);}).length;
+  });
+  main.innerHTML = html;
+  document.getElementById("empty").style.display = shown ? "none" : "block";
+  document.getElementById("countline").textContent = "当前显示 " + shown + " / 42 篇"
+    + (state.tag ? " · 标签：" + state.tag : "")
+    + (state.q ? " · 搜索：“" + state.q + "”" : "");
+  bindCards();
+}
+function bindCards(){
+  var btns = document.querySelectorAll(".expand");
+  for(var i=0;i<btns.length;i++){
+    btns[i].addEventListener("click", function(){
+      var card = this.closest(".card");
+      var open = card.classList.toggle("open");
+      this.textContent = open ? "收起" : "展开笔记";
+      this.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  }
+  var tags = document.querySelectorAll(".card .tag");
+  for(var j=0;j<tags.length;j++){
+    tags[j].addEventListener("click", function(){ setTag(this.getAttribute("data-tag")); });
+  }
+}
+function setTag(t){
+  state.tag = (state.tag===t) ? "" : t;
+  var chips = document.querySelectorAll(".tagchip");
+  for(var i=0;i<chips.length;i++){
+    chips[i].classList.toggle("on", chips[i].getAttribute("data-tag")===state.tag);
+  }
+  render();
+}
+/* tag chips */
+(function(){
+  var freq = {};
+  PAPERS.forEach(function(p){ p.tags.forEach(function(t){ freq[t]=(freq[t]||0)+1; }); });
+  var list = Object.keys(freq).sort(function(a,b){ return freq[b]-freq[a] || (a<b?-1:1); });
+  var row = document.getElementById("tagrow");
+  row.innerHTML = list.map(function(t){ return '<button class="tagchip" data-tag="'+t+'">'+t+' · '+freq[t]+'</button>'; }).join("");
+  var chips = row.querySelectorAll(".tagchip");
+  for(var i=0;i<chips.length;i++){ chips[i].addEventListener("click", function(){ setTag(this.getAttribute("data-tag")); }); }
+})();
+document.getElementById("q").addEventListener("input", function(){ state.q = this.value.trim(); render(); });
+var segBtns = document.querySelectorAll(".seg button");
+for(var i=0;i<segBtns.length;i++){
+  segBtns[i].addEventListener("click", function(){
+    state.seg = this.getAttribute("data-seg");
+    for(var k=0;k<segBtns.length;k++) segBtns[k].classList.toggle("on", segBtns[k]===this);
+    render();
+  });
+}
+render();
+
+/* Datasets */
+var DS1 = [
+["KAIST","https://soonminhwang.github.io/rgbt-ped-detection/","2015","RGB, LWIR","95K","1"],
+["CVC-14","http://adas.cvc.uab.es/elektra/enigma-portfolio/cvc-14-visible-fir-day-night-pedestrian-sequence-dataset/","2016","RGB, LWIR","8K","1"],
+["FLIR","https://www.flir.cn/oem/adas/adas-dataset-form/","2018","RGB, LWIR","20K","5"],
+["FLIR-aligned","https://github.com/zonaqiu/FLIR-align","2020","RGB, LWIR","5K","3"],
+["Utokyo","https://www.mi.t.u-tokyo.ac.jp/static/projects/mil_multispectral/","2017","RGB, NIR, MIR, FIR","7K","5"],
+["LLVIP","https://bupt-ai-cz.github.io/LLVIP/","2021","RGB, LWIR","15K","1"],
+["M3FD","https://github.com/dlut-dimt/TarDAL","2022","RGB, LWIR","4K","6"],
+["Multi-Spectral Stereo","https://github.com/UkcheolShin/MS2-MultiSpectralStereoDataset","2023","RGB, NIR, LWIR","195K","4"],
+["SMOD","https://www.kaggle.com/datasets/zizhaochen6/sjtu-multispectral-object-detection-smod-dataset","2024","RGB, LWIR","8K","4"],
+["MMPD","https://github.com/jin-s13/MMPD-Dataset","2024","RGB, LWIR","260K","1"],
+["InfraParis","https://ensta-u2is-ai.github.io/infraParis/","2024","RGB, LWIR, Depth","7K","19"],
+["MFAD","https://github.com/hukefy/EI2Det","2025","RGB, LWIR","12K","6"],
+["MMVIP","https://github.com/yyppptjr/MMVIP","2026","RGB, LWIR","128K","2"],
+["RGBT-Ground","https://github.com/crazyxiaoxi/RGBTVG","2026","RGB, LWIR","40K","5"]
+];
+var DS2 = [
+["DroneVehicle","https://github.com/VisDrone/DroneVehicle","2021","RGB, LWIR","56K","5","Partially"],
+["VEDAI","https://downloads.greyc.fr/vedai/","2014","RGB, NIR","1K","9","Strictly"],
+["NII-CU","https://www.nii-cu-multispectral.org/","2022","RGB, LWIR","5K","1","Strictly"],
+["DVTOD","https://github.com/VDT-2048/DVTOD","2024","RGB, LWIR","2K","3","Misaligned"],
+["VTSaR","https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10833840","2024","RGB, LWIR","40K","1","Strictly"],
+["RGBT-Tiny","https://github.com/XinyiYing/RGBT-Tiny","2025","RGB, LWIR","93K","7","Partially"],
+["ATR-UMOD","https://github.com/supercpy/ATR-UMOD","2025","RGB, LWIR","13K","11","Partially"],
+["MODA","https://github.com/shuaihao-han/MODA","2026","RGB, NIR","13K","8","Strictly"],
+["Tri-Modal Dataset","https://github.com/radlab-sketch/trimodal-uav-det.git","2026","RGB, LWIR, Event","10K","1","Partially"]
+];
+function fillDS(id, rows, labels){
+  var tb = document.querySelector("#"+id+" tbody");
+  tb.innerHTML = rows.map(function(r){
+    var tds = r.slice(2).map(function(v,i){ return '<td data-l="'+labels[i+1]+'">'+v+'</td>'; }).join("");
+    return '<tr><td><a href="'+r[1]+'" target="_blank" rel="noopener">'+r[0]+'</a></td>'+tds+'</tr>';
+  }).join("");
+}
+fillDS("ds1", DS1, ["数据集","年份","模态","图像数","类别数"]);
+fillDS("ds2", DS2, ["数据集","年份","模态","图像数","类别数","对齐"]);
+</script>
+</body>
+</html>
