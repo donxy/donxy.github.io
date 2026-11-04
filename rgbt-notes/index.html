@@ -68,11 +68,19 @@ h4.sub{font-size:15.5px;margin:22px 0 2px;color:var(--teal-dark)}
 .badge{display:inline-block;font-weight:700;font-size:12px;border-radius:999px;padding:1px 9px;margin-right:6px;vertical-align:1px}
 .badge.full{background:var(--teal);color:#fff}
 .badge.abs{background:#efeee9;color:var(--muted);border:1px solid var(--line2)}
-.deep{margin-top:16px;background:#fbfaf7;border:1px solid var(--line2);border-radius:10px;padding:14px 16px;scroll-margin-top:180px}
-.deep-head{font-weight:900;font-size:14.5px;color:var(--teal-dark);letter-spacing:.03em;margin:0 0 8px}
-.deep h6{font-size:13.5px;margin:12px 0 2px;color:var(--ink)}
-.deep h6:first-of-type{margin-top:4px}
-.deep p{margin:0;font-size:14px;color:#333d4a;line-height:1.7}
+.deep{margin-top:16px;background:#fbfaf7;border:1px solid var(--line2);border-radius:10px;padding:20px 22px;scroll-margin-top:180px}
+.deep-head{font-weight:900;font-size:14.5px;color:var(--teal-dark);letter-spacing:.03em;margin:0 0 10px}
+.deep h6{font-size:16px;font-weight:900;margin:26px 0 10px;padding:2px 0 2px 11px;border-left:4px solid var(--teal);color:var(--ink);line-height:1.45}
+.deep h6:first-of-type{margin-top:8px}
+.deep h6 .no{color:var(--teal);margin-right:7px}
+.deep p{margin:0 0 9px;font-size:14.5px;color:#333d4a;line-height:1.85}
+.deep ul{margin:0 0 10px;padding:0;list-style:none}
+.deep li{font-size:14.5px;line-height:1.85;color:#333d4a;margin:0 0 7px}
+.deep li p{margin:0 0 6px}
+.deep li p:last-child{margin-bottom:0}
+.deep ul.dlist li{position:relative;padding-left:17px}
+.deep ul.dlist li::before{content:"";position:absolute;left:3px;top:.64em;width:6px;height:6px;border-radius:2px;background:var(--teal)}
+.deep .figsrc{margin-bottom:0}
 .deep figure{margin:6px 0 14px}
 .deep figure img{display:block;width:100%;height:auto;background:#fff;border:1px solid var(--line2);border-radius:8px;padding:6px}
 .deep figcaption{font-size:13.5px;color:#333d4a;line-height:1.65;margin-top:8px}
@@ -118,6 +126,7 @@ footer{margin-top:56px;border-top:1px solid var(--line);padding-top:20px;font-si
   .wrap{padding:0 14px 56px}
   header.site{padding-top:30px}
   .card{padding:15px 16px}
+  .deep{padding:16px 15px}
   .card-top{flex-direction:column;gap:8px}
   .expand{align-self:flex-start}
   /* tables become stacked rows */
@@ -666,6 +675,116 @@ function matches(p){
   }
   return true;
 }
+/*DEEPSTRUCT*/
+/* Deep-read body structuring: adds paragraph breaks and lists only.
+   Concatenating the text of the output always reproduces the source string verbatim. */
+function splitSentences(t){
+  var out=[], cur="", closers="」』）】｝})\"”’'";
+  for(var i=0;i<t.length;i++){
+    var c=t.charAt(i); cur+=c;
+    if(c==="。"||c==="！"||c==="？"){
+      while(i+1<t.length && closers.indexOf(t.charAt(i+1))>=0){ cur+=t.charAt(i+1); i++; }
+      out.push(cur); cur="";
+    }
+  }
+  if(cur) out.push(cur);
+  return out;
+}
+function groupParas(sents){
+  if(!sents.length) return [];
+  if(sents.length<=3) return [sents.slice()];
+  var paras=[], cur=[], curLen=0;
+  for(var i=0;i<sents.length;i++){
+    if(cur.length && (cur.length>=4 || curLen>=560 || (cur.length>=2 && curLen>=360))){
+      paras.push(cur); cur=[]; curLen=0;
+    }
+    cur.push(sents[i]); curLen+=sents[i].length;
+  }
+  if(cur.length) paras.push(cur);
+  if(paras.length>1){
+    var last=paras[paras.length-1], prev=paras[paras.length-2];
+    if(last.length===1){
+      if(prev.length>=3){ last.unshift(prev.pop()); }
+      else if(prev.length===2){ prev.push(last[0]); paras.pop(); }
+    }
+  }
+  return paras;
+}
+var CN_NUM={"一":1,"二":2,"三":3,"四":4,"五":5,"六":6,"七":7,"八":8,"九":9,"十":10};
+function enumBounds(body){
+  var pats=[
+    {re:/（(\d{1,2})）/g, num:function(m){ return parseInt(m[1],10); }},
+    {re:/\((\d{1,2})\)/g, num:function(m){ return parseInt(m[1],10); }},
+    {re:/其([一二三四五六七八九十])(?=[，、：:是为])/g, num:function(m){ return CN_NUM[m[1]]; }},
+    {re:/第([一二三四五六七八九十])(?=[，、])/g, num:function(m){ return CN_NUM[m[1]]; }}
+  ];
+  var best=null;
+  pats.forEach(function(p){
+    var marks=[], m;
+    while((m=p.re.exec(body))!==null){ marks.push({idx:m.index, val:p.num(m)}); }
+    var bounds=[], i=0;
+    while(i<marks.length){
+      if(marks[i].val===1){
+        var j=i;
+        while(j+1<marks.length && marks[j+1].val===marks[j].val+1) j++;
+        if(j>i){ for(var k=i;k<=j;k++) bounds.push(marks[k]); i=j+1; continue; }
+      }
+      i++;
+    }
+    if(bounds.length>=2 && (!best || bounds[0].idx<best[0].idx || (bounds[0].idx===best[0].idx && bounds.length>best.length))) best=bounds;
+  });
+  return best;
+}
+function parasOf(text){
+  return groupParas(splitSentences(text)).map(function(g){
+    return "<p>"+g.map(esc).join("")+"</p>";
+  }).join("");
+}
+function splitSemis(s){
+  var parts=[], cur="";
+  for(var i=0;i<s.length;i++){ cur+=s.charAt(i); if(s.charAt(i)==="；"){ parts.push(cur); cur=""; } }
+  if(cur) parts.push(cur);
+  return parts;
+}
+function deepBodyHTML(title, body){
+  var bounds=enumBounds(body);
+  if(bounds){
+    var out="";
+    var intro=body.slice(0, bounds[0].idx);
+    if(intro) out+=parasOf(intro);
+    var items=bounds.map(function(b, k){
+      var end=(k+1<bounds.length) ? bounds[k+1].idx : body.length;
+      return body.slice(b.idx, end);
+    });
+    out+='<ul class="elist">'+items.map(function(it){
+      if(groupParas(splitSentences(it)).length<=1) return "<li>"+esc(it)+"</li>";
+      return "<li>"+parasOf(it)+"</li>";
+    }).join("")+"</ul>";
+    return out;
+  }
+  if(title==="关键数字"){
+    var sents=splitSentences(body), out2="", buf=[];
+    var flush=function(){
+      if(buf.length){
+        out2+=groupParas(buf).map(function(g){ return "<p>"+g.map(esc).join("")+"</p>"; }).join("");
+        buf=[];
+      }
+    };
+    sents.forEach(function(s){
+      if((s.match(/；/g)||[]).length>=2){
+        flush();
+        out2+='<ul class="dlist">'+splitSemis(s).map(function(x){ return "<li>"+esc(x)+"</li>"; }).join("")+"</ul>";
+      } else { buf.push(s); }
+    });
+    flush();
+    return out2;
+  }
+  return parasOf(body);
+}
+function deepSectionHTML(s, no){
+  return '<h6><span class="no">'+no+" ·</span>"+esc(s[0])+"</h6>"+deepBodyHTML(s[0], s[1]);
+}
+/*/DEEPSTRUCT*/
 function cardHTML(p){
   var title = p.paper ? '<a href="'+p.paper+'" target="_blank" rel="noopener">'+esc(p.title)+'</a>' : esc(p.title);
   var tags = p.tags.map(function(t){return '<button class="tag" data-tag="'+t+'">'+t+'</button>';}).join("");
@@ -689,7 +808,7 @@ function cardHTML(p){
     }
     deep = '<div class="deep"><p class="deep-head">精读笔记</p>'
       + fig
-      + p.deep.map(function(s){ return '<h6>'+esc(s[0])+'</h6><p>'+esc(s[1])+'</p>'; }).join("")
+      + p.deep.map(function(s, si){ return deepSectionHTML(s, si+1); }).join("")
       + '</div>';
   }
   var btnLabel = p.basis==="full" ? "展开笔记（含精读）" : "展开笔记";
