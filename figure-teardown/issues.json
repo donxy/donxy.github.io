@@ -1,1 +1,89 @@
-{"base_url":"https://donxy.github.io/figure-teardown/","issues":[{"artifact":"ding-kan-ke-yan-pei-tu-shi-jue-chai-jie-001-urmif","description":"URMIF：粉彩家族编码与双面板阶段流。《顶刊科研配图视觉拆解》第 001 期：拆解 URMIF（TPAMI 2026）框架总览图与 RIVIR 数据集图的配色、图形与布局，附实测色板、图形组件与风格复现提示词。","lede":"Universal Representation for Real-World Misaligned Infrared-Visible Image Fusion（TPAMI）。颜色只编码模块家族、重要性交给尺寸；线型即语法；英雄框的渐变描边把核心机制画成字面图景。附实测色板、九个图形组件与中英双版风格迁移提示词。","main_fig":"issues/001-urmif/figs/repo-structure.png","no":"001","page":"001-urmif.html","paper":"URMIF","prompt_id":"PR-001","slug":"001-urmif","tags":["框架图","数据集图"],"title":"URMIF：粉彩家族编码与双面板阶段流","venue":"TPAMI 2026","version_source":"出版社正式版（IEEE TPAMI 2026；原图经作者官方仓库获取）"},{"artifact":"ding-kan-ke-yan-pei-tu-shi-jue-chai-jie-002-fusion-mamba","description":"Fusion-Mamba：Office 粉彩色板与双层规格行。《顶刊科研配图视觉拆解》第 002 期：拆解 Fusion-Mamba（TMM 2025）Fig. 1–3 的配色、图形与布局，附实测色板、图形组件与风格复现提示词。","lede":"Fusion-Mamba for Cross-modality Object Detection（IEEE TMM）。模态一轴、算子一轴的双色编码；饱和度倒置配给——最小的芯片给全图唯一的纯琥珀；页脚规格行用实例当图例；机制图里编号逐号归位。附实测色板、图形组件与中英双版风格迁移提示词。","main_fig":"issues/002-fusion-mamba/figs/fig2-architecture.png","no":"002","page":"002-fusion-mamba.html","paper":"Fusion-Mamba","prompt_id":"PR-002","slug":"002-fusion-mamba","tags":["热力图矩阵","框架图","机制图"],"title":"Fusion-Mamba：Office 粉彩色板与双层规格行","venue":"TMM 2025","version_source":"arXiv 预印本版（arXiv:2404.09146）"},{"artifact":"ding-kan-ke-yan-pei-tu-shi-jue-chai-jie-003-pfgf","description":"PFGF：图节点隐喻与「最深即最重要」。《顶刊科研配图视觉拆解》第 003 期：拆解 PFGF（CVPR 2025）Fig. 1–3 的配色、图形与布局，附实测色板、图形组件与风格复现提示词。","lede":"Pseudo Visible Feature Fine-Grained Fusion for Thermal Object Detection（CVPR）。把核心数据结构画成图的形状：圆节点三角队形、粗块箭头专表拼接、虚线引线做缩放呼应；最重要的 leader 节点同尺寸、只靠全图最深的藏蓝显权重。附实测色板、图形组件与中英双版风格迁移提示词。","main_fig":"issues/003-pfgf/figs/fig2-framework.png","no":"003","page":"003-pfgf.html","paper":"PFGF","prompt_id":"PR-003","slug":"003-pfgf","tags":["对照图","框架图","消融网格"],"title":"PFGF：图节点隐喻与「最深即最重要」","venue":"CVPR 2025","version_source":"出版社正式版（CVF Open Access）"},{"artifact":"ding-kan-ke-yan-pei-tu-shi-jue-chai-jie-004-ei2det","description":"EI²Det：三带分节、胶囊语言与光照母题。《顶刊科研配图视觉拆解》第 004 期：拆解 EI²Det（TCSVT 2025）框架图与 MFAD 数据集图的配色、图形与布局，附实测色板、图形组件与风格复现提示词。","lede":"EI²Det: Edge-Guided Illumination-Aware Interactive Learning for Visible-Infrared Object Detection（IEEE TCSVT）。近白粉彩填充＋金边配给，胶囊即 token、形状即类别；证据插图挂双流中缝；光照渐变母题在框架图、模块图与数据集图里三度复现，数据集列干脆按光照排序。附实测色板、图形组件与中英双版风格迁移提示词。","main_fig":"issues/004-ei2det/figs/framework.png","no":"004","page":"004-ei2det.html","paper":"EI²Det","prompt_id":"PR-004","slug":"004-ei2det","tags":["框架图","数据集图"],"title":"EI²Det：三带分节、胶囊语言与光照母题","venue":"TCSVT 2025","version_source":"作者官方仓库原图（正文为 IEEE TCSVT 2025 正式版）"},{"artifact":"ding-kan-ke-yan-pei-tu-shi-jue-chai-jie-005-tardal","description":"TarDAL：信息图极繁主义——云朵、苹果与旭日图。《顶刊科研配图视觉拆解》第 005 期：拆解 TarDAL（CVPR 2022）Fig. 1–3 的配色、图形与布局，附实测色板、图形组件与风格复现提示词。","lede":"Target-aware Dual Adversarial Learning and a Multi-scenario Multi-Modality Benchmark to Fuse Infrared and Visible for Object Detection（CVPR Oral）。与前四期的粉彩克制正相反：气泡图＋旭日图＋直方图三联横幅、云朵照片拼贴、3D 损失曲面上一颗红苹果标最优点、层条码规格条——极繁靠色码复用缝合。与第 001 期同为一作（刘晋源），四年风格迁移对照。附实测色板、图形组件与中英双版风格迁移提示词。","main_fig":"issues/005-tardal/figs/fig2-framework.png","no":"005","page":"005-tardal.html","paper":"TarDAL","prompt_id":"PR-005","slug":"005-tardal","tags":["信息图","框架图","结构条"],"title":"TarDAL：信息图极繁主义——云朵、苹果与旭日图","venue":"CVPR 2022","version_source":"arXiv 预印本版（arXiv:2203.16220）"}],"series":"顶刊科研配图视觉拆解"}
+{
+ "base_url": "https://donxy.github.io/figure-teardown/",
+ "issues": [
+  {
+   "description": "URMIF：粉彩家族编码与双面板阶段流。《顶刊科研配图视觉拆解》第 001 期：拆解 URMIF（TPAMI 2026）框架总览图与 RIVIR 数据集图的配色、图形与布局，附实测色板、图形组件与风格复现提示词。",
+   "lede": "Universal Representation for Real-World Misaligned Infrared-Visible Image Fusion（TPAMI）。颜色只编码模块家族、重要性交给尺寸；线型即语法；英雄框的渐变描边把核心机制画成字面图景。附实测色板、九个图形组件与中英双版风格迁移提示词。",
+   "no": "001",
+   "page": "001-urmif.html",
+   "paper": "URMIF",
+   "prompt_id": "PR-001",
+   "slug": "001-urmif",
+   "tags": [
+    "框架图",
+    "数据集图"
+   ],
+   "title": "URMIF：粉彩家族编码与双面板阶段流",
+   "venue": "TPAMI 2026",
+   "version_source": "出版社正式版（IEEE TPAMI 2026；原图经作者官方仓库获取）"
+  },
+  {
+   "description": "Fusion-Mamba：Office 粉彩色板与双层规格行。《顶刊科研配图视觉拆解》第 002 期：拆解 Fusion-Mamba（TMM 2025）Fig. 1–3 的配色、图形与布局，附实测色板、图形组件与风格复现提示词。",
+   "lede": "Fusion-Mamba for Cross-modality Object Detection（IEEE TMM）。模态一轴、算子一轴的双色编码；饱和度倒置配给——最小的芯片给全图唯一的纯琥珀；页脚规格行用实例当图例；机制图里编号逐号归位。附实测色板、图形组件与中英双版风格迁移提示词。",
+   "no": "002",
+   "page": "002-fusion-mamba.html",
+   "paper": "Fusion-Mamba",
+   "prompt_id": "PR-002",
+   "slug": "002-fusion-mamba",
+   "tags": [
+    "热力图矩阵",
+    "框架图",
+    "机制图"
+   ],
+   "title": "Fusion-Mamba：Office 粉彩色板与双层规格行",
+   "venue": "TMM 2025",
+   "version_source": "arXiv 预印本版（arXiv:2404.09146）"
+  },
+  {
+   "description": "PFGF：图节点隐喻与「最深即最重要」。《顶刊科研配图视觉拆解》第 003 期：拆解 PFGF（CVPR 2025）Fig. 1–3 的配色、图形与布局，附实测色板、图形组件与风格复现提示词。",
+   "lede": "Pseudo Visible Feature Fine-Grained Fusion for Thermal Object Detection（CVPR）。把核心数据结构画成图的形状：圆节点三角队形、粗块箭头专表拼接、虚线引线做缩放呼应；最重要的 leader 节点同尺寸、只靠全图最深的藏蓝显权重。附实测色板、图形组件与中英双版风格迁移提示词。",
+   "no": "003",
+   "page": "003-pfgf.html",
+   "paper": "PFGF",
+   "prompt_id": "PR-003",
+   "slug": "003-pfgf",
+   "tags": [
+    "对照图",
+    "框架图",
+    "消融网格"
+   ],
+   "title": "PFGF：图节点隐喻与「最深即最重要」",
+   "venue": "CVPR 2025",
+   "version_source": "出版社正式版（CVF Open Access）"
+  },
+  {
+   "description": "EI²Det：三带分节、胶囊语言与光照母题。《顶刊科研配图视觉拆解》第 004 期：拆解 EI²Det（TCSVT 2025）框架图与 MFAD 数据集图的配色、图形与布局，附实测色板、图形组件与风格复现提示词。",
+   "lede": "EI²Det: Edge-Guided Illumination-Aware Interactive Learning for Visible-Infrared Object Detection（IEEE TCSVT）。近白粉彩填充＋金边配给，胶囊即 token、形状即类别；证据插图挂双流中缝；光照渐变母题在框架图、模块图与数据集图里三度复现，数据集列干脆按光照排序。附实测色板、图形组件与中英双版风格迁移提示词。",
+   "no": "004",
+   "page": "004-ei2det.html",
+   "paper": "EI²Det",
+   "prompt_id": "PR-004",
+   "slug": "004-ei2det",
+   "tags": [
+    "框架图",
+    "数据集图"
+   ],
+   "title": "EI²Det：三带分节、胶囊语言与光照母题",
+   "venue": "TCSVT 2025",
+   "version_source": "作者官方仓库原图（正文为 IEEE TCSVT 2025 正式版）"
+  },
+  {
+   "description": "TarDAL：信息图极繁主义——云朵、苹果与旭日图。《顶刊科研配图视觉拆解》第 005 期：拆解 TarDAL（CVPR 2022）Fig. 1–3 的配色、图形与布局，附实测色板、图形组件与风格复现提示词。",
+   "lede": "Target-aware Dual Adversarial Learning and a Multi-scenario Multi-Modality Benchmark to Fuse Infrared and Visible for Object Detection（CVPR Oral）。与前四期的粉彩克制正相反：气泡图＋旭日图＋直方图三联横幅、云朵照片拼贴、3D 损失曲面上一颗红苹果标最优点、层条码规格条——极繁靠色码复用缝合。与第 001 期同为一作（刘晋源），四年风格迁移对照。附实测色板、图形组件与中英双版风格迁移提示词。",
+   "no": "005",
+   "page": "005-tardal.html",
+   "paper": "TarDAL",
+   "prompt_id": "PR-005",
+   "slug": "005-tardal",
+   "tags": [
+    "信息图",
+    "框架图",
+    "结构条"
+   ],
+   "title": "TarDAL：信息图极繁主义——云朵、苹果与旭日图",
+   "venue": "CVPR 2022",
+   "version_source": "arXiv 预印本版（arXiv:2203.16220）"
+  }
+ ],
+ "series": "顶刊科研配图视觉拆解"
+}
