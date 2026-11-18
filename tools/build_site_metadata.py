@@ -30,7 +30,7 @@ def md_title(path: Path) -> str:
     content = path.read_text(encoding="utf-8-sig")
     match = re.search(r"^title:\s*(.+)$", content, re.MULTILINE)
     if match:
-        return match.group(1).strip().strip('"\'')
+        return match.group(1).strip().strip('"').strip("'")
     match = re.search(r"^#\s+(.+)$", content, re.MULTILINE)
     return match.group(1).strip() if match else path.stem
 
