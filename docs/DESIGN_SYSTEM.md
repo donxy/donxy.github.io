@@ -28,7 +28,7 @@
 
 ## 加载方式与发布顺序
 
-主站直接引用 `/design/shared.css`；两个 Quartz 子站在 `quartz/styles/custom.scss` 中使用 CSS `@import url("https://donxy.github.io/design/shared.css")`。各处使用 `var(--dn-*, fallback)`，即使主站样式暂时不可访问，也能沿用原有独立样式。
+主站直接引用 `/design/shared.css`；两个 Quartz 子站在 `quartz/components/Head.tsx` 中通过 `<link rel="stylesheet" href="https://donxy.github.io/design/shared.css" />`。各处使用 `var(--dn-*, fallback)`，即使主站样式暂时不可访问，也能沿用原有独立样式。
 
 **发布顺序**：先合并主站 PR，确认 CSS 文件在线，再合并两个子站 PR。每个子站须单独运行 `npx quartz build` 与移动端检查。
 
