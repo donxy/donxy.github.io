@@ -10,13 +10,13 @@ Sources of truth (numbers are never hand-written in the template):
 
 Usage: python3 build_homepage.py [--out DIR]   (default: this script's folder)
 """
-import argparse, csv, json, sys
+import argparse, csv, json, os, sys
 from pathlib import Path
 
 HOME = Path.home()
-PAPERS_CSV = HOME / "workspace/github-repos/awesome-RGBT-ObjectDetection/papers.csv"
-ISSUES_JSON = HOME / "workspace/figure-teardown/issues.json"
-AD_CONTENT = HOME / "workspace/autonomous-driving-notes/quartz/content"
+PAPERS_CSV = Path(os.environ.get("PAPERS_CSV", str(HOME / "workspace/github-repos/awesome-RGBT-ObjectDetection/papers.csv")))
+ISSUES_JSON = Path(os.environ.get("ISSUES_JSON", str(Path(__file__).resolve().parent.parent / "figure-teardown/issues.json")))
+AD_CONTENT = Path(os.environ.get("AD_CONTENT", str(HOME / "workspace/autonomous-driving-notes/quartz/content")))
 TEMPLATE = Path(__file__).with_name("index.template.html")
 
 AD_LABELS = [("history", "历史"), ("technology", "技术"), ("companies", "公司"),

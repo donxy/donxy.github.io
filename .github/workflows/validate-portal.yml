@@ -1,0 +1,43 @@
+name: Validate personal portal
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: |
+          python -m pip install Pillow
+          sudo apt-get update
+          sudo apt-get install -y fonts-noto-cjk
+      - name: Obtain source snapshots
+        run: |
+          git clone --depth 1 https://github.com/donxy/awesome-RGBT-ObjectDetection.git "$RUNNER_TEMP/papers"
+          git clone --depth 1 https://github.com/donxy/rgbt-notes.git "$RUNNER_TEMP/rgbt"
+          git clone --depth 1 https://github.com/donxy/autonomous-driving-notes.git "$RUNNER_TEMP/driving"
+      - name: Test generator and generated output
+        env:
+          PAPERS_CSV: ${{ runner.temp }}/papers/papers.csv
+          ISSUES_JSON: ${{ github.workspace }}/figure-teardown/issues.json
+          AD_CONTENT: ${{ runner.temp }}/driving/content
+        run: |
+          python -m py_compile tools/build_homepage.py tools/build_site_metadata.py
+          mkdir -p "$RUNNER_TEMP/preview"
+          python tools/build_homepage.py --out "$RUNNER_TEMP/preview"
+          python tools/build_site_metadata.py \
+            --papers-csv "$PAPERS_CSV" \
+            --issues-json "$ISSUES_JSON" \
+            --ad-content "$AD_CONTENT" \
+            --rgbt-content "$RUNNER_TEMP/rgbt/content" \
+            --output "$RUNNER_TEMP/preview/site-metadata.json"
+          python -m json.tool "$RUNNER_TEMP/preview/site-metadata.json" > /dev/null
+          test -s "$RUNNER_TEMP/preview/index.html"
+          test -s "$RUNNER_TEMP/preview/og.png"
