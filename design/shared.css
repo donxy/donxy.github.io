@@ -1,0 +1,20 @@
+/*
+ * donxy shared visual tokens v1.
+ * This file intentionally exports neutral design primitives only.
+ * Each independent site retains its own semantic colors and layout.
+ * Read: docs/DESIGN_SYSTEM.md
+ */
+:root {
+  --dn-font-display: "Noto Serif SC", "Songti SC", "STSong", "SimSun", Georgia, serif;
+  --dn-font-body: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --dn-font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  --dn-body-line-height: 1.78;
+  --dn-body-tracking: 0.012em;
+  --dn-radius-small: 8px;
+  --dn-radius-card: 12px;
+  --dn-radius-feature: 14px;
+  --dn-focus-width: 2px;
+  --dn-duration-fast: 160ms;
+  --dn-reading-measure: 760px;
+}
