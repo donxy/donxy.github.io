@@ -4,6 +4,7 @@
 Sources of truth (numbers are never hand-written in the template):
   - papers.csv            ~/workspace/github-repos/awesome-RGBT-ObjectDetection/papers.csv
   - teardown issues       ~/workspace/figure-teardown/issues.json
+  - recent updates        tools/updates.json (editorial log next to this script)
   - AD notes count/groups ~/workspace/autonomous-driving-notes/quartz/content/
                           (same rule as that site's scripts/count-notes.mjs:
                            every .md under content/ except index.md)
@@ -16,6 +17,7 @@ from pathlib import Path
 HOME = Path.home()
 PAPERS_CSV = HOME / "workspace/github-repos/awesome-RGBT-ObjectDetection/papers.csv"
 ISSUES_JSON = HOME / "workspace/figure-teardown/issues.json"
+UPDATES_JSON = Path(__file__).with_name("updates.json")
 AD_CONTENT = HOME / "workspace/autonomous-driving-notes/quartz/content"
 TEMPLATE = Path(__file__).with_name("index.template.html")
 
@@ -59,6 +61,17 @@ def teardown_stats():
             '<span class="vn">{venue}</span></a></li>'.format(
                 page=it["page"], no=it["no"], title=it["title"], venue=it["venue"]))
     return {"TEARDOWN_COUNT": str(len(issues)), "ISSUE_LIST": "\n".join(rows)}
+
+
+def updates_block():
+    data = json.load(open(UPDATES_JSON, encoding="utf-8"))
+    rows = []
+    for u in data["updates"][:6]:
+        rows.append(
+            '          <li><span class="u-date">{date}</span>'
+            '<i class="u-dot d-{line}"></i>'
+            '<a href="{href}">{text}</a></li>'.format(**u))
+    return {"UPDATES": "\n".join(rows)}
 
 
 def ad_stats():
@@ -128,6 +141,7 @@ def main():
     values.update(papers_stats())
     values.update(teardown_stats())
     values.update(ad_stats())
+    values.update(updates_block())
 
     html = TEMPLATE.read_text(encoding="utf-8")
     for k, v in values.items():

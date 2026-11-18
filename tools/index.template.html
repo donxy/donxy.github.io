@@ -165,6 +165,21 @@
   .issues .tt b{font-weight:600}
   .issues .vn{margin-left:auto; font-size:12.5px; color:var(--ink-soft); flex:none}
 
+  /* ---------- recent updates ---------- */
+  section.updates{margin-top:44px}
+  section.updates .sec-head h2 i{background:var(--accent)}
+  .updates-list{list-style:none; margin:0; padding:0}
+  .updates-list li{display:flex; align-items:baseline; gap:12px; padding:9px 2px; border-top:1px solid var(--line)}
+  .updates-list li:first-child{border-top:none}
+  .updates-list .u-date{font-family:var(--serif); font-size:13.5px; color:var(--ink-soft); flex:none; min-width:86px}
+  .updates-list .u-dot{width:8px; height:8px; border-radius:50%; display:inline-block; flex:none; position:relative; top:-1px}
+  .updates-list .u-dot.d-rgbt{background:var(--c-rgbt)}
+  .updates-list .u-dot.d-visual{background:var(--c-visual)}
+  .updates-list .u-dot.d-drive{background:var(--c-drive)}
+  .updates-list .u-dot.d-site{background:var(--ink-soft)}
+  .updates-list a{color:inherit; text-decoration:none; font-size:14.5px}
+  .updates-list a:hover{color:var(--accent-ink); text-decoration:underline}
+
   /* ---------- about ---------- */
   .about p{font-size:15.5px; color:var(--ink-soft); max-width:720px}
   .about p b{color:var(--ink)}
@@ -223,6 +238,13 @@
     <div class="stat s-visual"><div class="num">{{TEARDOWN_COUNT}}</div><div class="lab"><i></i>期配图拆解</div></div>
     <div class="stat s-drive"><div class="num">{{AD_COUNT}}</div><div class="lab"><i></i>篇自动驾驶笔记</div></div>
   </div>
+
+  <section class="updates">
+    <div class="sec-head"><h2><i></i>最近更新</h2><div class="rule"></div><span>Recent Updates</span></div>
+    <ul class="updates-list">
+{{UPDATES}}
+    </ul>
+  </section>
 
   <section data-line="rgbt">
     <div class="sec-head"><h2><i></i>研究线</h2><div class="rule"></div><span>RGBT Object Detection</span></div>

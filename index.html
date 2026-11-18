@@ -6,7 +6,7 @@
 <title>donxy — 研究笔记与视觉拆解</title>
 <meta name="description" content="donxy 的个人主页：RGBT 目标检测论文精读、顶刊科研配图视觉拆解与自动驾驶产业笔记，三条线持续更新。" />
 <meta property="og:title" content="donxy — 研究笔记与视觉拆解" />
-<meta property="og:description" content="102 篇 RGBT 论文笔记 · 5 期配图拆解 · 20 篇自动驾驶笔记。" />
+<meta property="og:description" content="102 篇 RGBT 论文笔记 · 5 期配图拆解 · 21 篇自动驾驶笔记。" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://donxy.github.io/" />
 <meta property="og:image" content="https://donxy.github.io/og.png" />
@@ -165,6 +165,21 @@
   .issues .tt b{font-weight:600}
   .issues .vn{margin-left:auto; font-size:12.5px; color:var(--ink-soft); flex:none}
 
+  /* ---------- recent updates ---------- */
+  section.updates{margin-top:44px}
+  section.updates .sec-head h2 i{background:var(--accent)}
+  .updates-list{list-style:none; margin:0; padding:0}
+  .updates-list li{display:flex; align-items:baseline; gap:12px; padding:9px 2px; border-top:1px solid var(--line)}
+  .updates-list li:first-child{border-top:none}
+  .updates-list .u-date{font-family:var(--serif); font-size:13.5px; color:var(--ink-soft); flex:none; min-width:86px}
+  .updates-list .u-dot{width:8px; height:8px; border-radius:50%; display:inline-block; flex:none; position:relative; top:-1px}
+  .updates-list .u-dot.d-rgbt{background:var(--c-rgbt)}
+  .updates-list .u-dot.d-visual{background:var(--c-visual)}
+  .updates-list .u-dot.d-drive{background:var(--c-drive)}
+  .updates-list .u-dot.d-site{background:var(--ink-soft)}
+  .updates-list a{color:inherit; text-decoration:none; font-size:14.5px}
+  .updates-list a:hover{color:var(--accent-ink); text-decoration:underline}
+
   /* ---------- about ---------- */
   .about p{font-size:15.5px; color:var(--ink-soft); max-width:720px}
   .about p b{color:var(--ink)}
@@ -221,8 +236,20 @@
     <div class="stat s-rgbt"><div class="num">102</div><div class="lab"><i></i>篇论文笔记</div></div>
     <div class="stat s-rgbt"><div class="num">86</div><div class="lab"><i></i>篇全文精读</div></div>
     <div class="stat s-visual"><div class="num">5</div><div class="lab"><i></i>期配图拆解</div></div>
-    <div class="stat s-drive"><div class="num">20</div><div class="lab"><i></i>篇自动驾驶笔记</div></div>
+    <div class="stat s-drive"><div class="num">21</div><div class="lab"><i></i>篇自动驾驶笔记</div></div>
   </div>
+
+  <section class="updates">
+    <div class="sec-head"><h2><i></i>最近更新</h2><div class="rule"></div><span>Recent Updates</span></div>
+    <ul class="updates-list">
+          <li><span class="u-date">2026-11-17</span><i class="u-dot d-drive"></i><a href="/autonomous-driving-notes/technology/perception-evolution">自动驾驶笔记站新增《感知范式演进：从目标列表到占用网络》</a></li>
+          <li><span class="u-date">2026-11-17</span><i class="u-dot d-drive"></i><a href="/autonomous-driving-notes/">自动驾驶笔记站更名为《无人驾驶技能树》</a></li>
+          <li><span class="u-date">2026-11-16</span><i class="u-dot d-site"></i><a href="/">个人主页改版上线：研究、视觉、观察三条线统一门户</a></li>
+          <li><span class="u-date">2026-11-12</span><i class="u-dot d-drive"></i><a href="/autonomous-driving-notes/">自动驾驶笔记站完成一轮界面与计数校准修复</a></li>
+          <li><span class="u-date">2026-11-11</span><i class="u-dot d-rgbt"></i><a href="/rgbt-notes/">RGBT 笔记站迁移至 Quartz 上线，102 篇笔记与对比表全部就位</a></li>
+          <li><span class="u-date">2026-11-10</span><i class="u-dot d-visual"></i><a href="/figure-teardown/">配图拆解站完成第一阶段升级</a></li>
+    </ul>
+  </section>
 
   <section data-line="rgbt">
     <div class="sec-head"><h2><i></i>研究线</h2><div class="rule"></div><span>RGBT Object Detection</span></div>
@@ -302,7 +329,7 @@
       <a class="card" href="/autonomous-driving-notes/">
         <div class="tagrow"><span class="pill">在线站点</span><span class="pill grey">持续更新</span></div>
         <h3>无人驾驶技能树</h3>
-        <p>20 篇自动驾驶研究笔记：从历史与技术路线，到公司竞争、监管与成本商业模式，关键事实逐条溯源，已核实事实与厂商口径分开标注。</p>
+        <p>21 篇自动驾驶研究笔记：从历史与技术路线，到公司竞争、监管与成本商业模式，关键事实逐条溯源，已核实事实与厂商口径分开标注。</p>
         <div class="go">打开笔记站 →</div>
       </a>
       <div class="card">
@@ -311,7 +338,7 @@
         <p>按问题而不是按公司堆叠：先看技术与历史，再看公司与市场，最后看监管与账本。</p>
         <div class="routes">
           <span>历史 · 3</span>
-          <span>技术 · 7</span>
+          <span>技术 · 8</span>
           <span>公司 · 6</span>
           <span>中国市场 · 1</span>
           <span>监管 · 2</span>
