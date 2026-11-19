@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en" data-type="hub">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>donxy — Research Notes & Visual Teardowns</title>
+<meta name="description" content="donxy's homepage: deep reads of RGBT object-detection papers, visual teardowns of top-venue research figures, and autonomous-driving industry notes — three lines, continuously updated." />
+<meta property="og:title" content="donxy — Research Notes & Visual Teardowns" />
+<meta property="og:description" content="102 RGBT paper notes · 5 figure teardown issues · 21 autonomous-driving notes." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://donxy.github.io/en/" />
+<meta property="og:image" content="https://donxy.github.io/en/og.png" />
+<link rel="alternate" hreflang="zh" href="https://donxy.github.io/" />
+<link rel="alternate" hreflang="en" href="https://donxy.github.io/en/" />
+<link rel="alternate" hreflang="x-default" href="https://donxy.github.io/" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e5941'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='36' fill='%23faf8f3' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E" />
+<style>
+  :root{
+    --bg:#faf8f3; --bg-soft:#f3f0e8; --card:#fffefb; --ink:#1c2a26; --ink-soft:#51625c;
+    --line:#e3ded2; --accent:#0e5941; --accent-ink:#0a4230; --accent-soft:#e2efe8;
+    --c-rgbt:#0e5941; --c-rgbt-ink:#0a4230; --c-rgbt-soft:#e2efe8;
+    --c-visual:#9c5a13; --c-visual-ink:#7c460c; --c-visual-soft:#f5e8d5;
+    --c-drive:#2e5f7a; --c-drive-ink:#214a61; --c-drive-soft:#e0ebf1;
+    --shadow:0 1px 2px rgba(28,42,38,.05),0 8px 24px rgba(28,42,38,.06);
+    --shadow-lift:0 2px 4px rgba(28,42,38,.06),0 16px 40px rgba(14,89,65,.14);
+    --nav-bg:rgba(250,248,243,.82);
+    --serif:"Source Serif 4",Georgia,"Songti SC","Noto Serif CJK SC","SimSun",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",sans-serif;
+  }
+  [data-theme="dark"]{
+    --bg:#101613; --bg-soft:#161d1a; --card:#182019; --ink:#e8ece7; --ink-soft:#9db0a7;
+    --line:#26312c; --accent:#4cc38a; --accent-ink:#7fd6ab; --accent-soft:#1d2f27;
+    --c-rgbt:#4cc38a; --c-rgbt-ink:#7fd6ab; --c-rgbt-soft:#1d2f27;
+    --c-visual:#d99a4e; --c-visual-ink:#eab676; --c-visual-soft:#332618;
+    --c-drive:#6fa8c4; --c-drive-ink:#9cc6dc; --c-drive-soft:#1d2c36;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
+    --shadow-lift:0 2px 4px rgba(0,0,0,.35),0 16px 40px rgba(0,0,0,.5);
+    --nav-bg:rgba(16,22,19,.82);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans);
+    -webkit-font-smoothing:antialiased; line-height:1.6;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    transition:background-color .3s ease,color .3s ease;
+  }
+  ::selection{background:var(--accent); color:#fff}
+  .ph{background:rgba(156,90,19,.12); border-bottom:1.5px dashed var(--c-visual); padding:0 4px; border-radius:3px}
+  .phline .ph{white-space:nowrap}
+
+  /* ---------- nav ---------- */
+  nav{
+    position:sticky; top:0; z-index:10; backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+    background:var(--nav-bg); border-bottom:1px solid transparent; transition:border-color .25s, box-shadow .25s;
+  }
+  nav.scrolled{border-bottom-color:var(--line); box-shadow:0 6px 24px rgba(20,35,30,.06)}
+  .nav-in{max-width:960px; margin:0 auto; padding:14px 24px; display:flex; align-items:center; gap:20px}
+  .brand{font-family:var(--serif); font-size:21px; font-weight:700; letter-spacing:.2px; color:var(--ink); text-decoration:none; display:flex; align-items:center; gap:10px}
+  .brand .dots{display:inline-flex; gap:4px}
+  .brand .dots i{width:8px; height:8px; border-radius:50%; display:inline-block}
+  .brand .dots i:nth-child(1){background:var(--c-rgbt)}
+  .brand .dots i:nth-child(2){background:var(--c-visual)}
+  .brand .dots i:nth-child(3){background:var(--c-drive)}
+  .nav-links{margin-left:auto; display:flex; align-items:center; gap:22px}
+  .nav-links a{color:var(--ink-soft); text-decoration:none; font-size:14.5px}
+  .nav-links a:hover{color:var(--accent-ink)}
+  #themeBtn{
+    border:1px solid var(--line); background:var(--card); color:var(--ink-soft); cursor:pointer;
+    width:34px; height:34px; border-radius:50%; font-size:15px; line-height:1; display:grid; place-items:center; transition:border-color .2s, transform .2s;
+  }
+  #themeBtn:hover{border-color:var(--accent); transform:rotate(18deg)}
+  .lang-sw{border:1px solid var(--line); background:var(--card); color:var(--ink-soft); border-radius:999px; padding:5px 13px; font-size:13.5px; text-decoration:none; transition:border-color .2s, color .2s}
+  .lang-sw:hover{border-color:var(--accent); color:var(--accent-ink)}
+  #langHint{display:none; background:var(--accent-soft); color:var(--accent-ink); font-size:13.5px; text-align:center; padding:8px 16px}
+  #langHint.show{display:block}
+  #langHint a{color:var(--accent-ink); font-weight:600}
+
+  main{max-width:960px; margin:0 auto; padding:0 24px 40px}
+
+  /* ---------- hero ---------- */
+  .hero{padding:84px 0 8px; animation:rise .7s ease both}
+  .hero .kicker{font-size:13px; letter-spacing:.28em; text-transform:uppercase; color:var(--accent); font-weight:600; margin:0 0 18px}
+  .hero h1{font-family:var(--serif); font-size:clamp(38px,6vw,58px); line-height:1.16; margin:0 0 18px; font-weight:700}
+  .hero h1 .thin{display:block; font-size:.5em; font-weight:400; color:var(--ink-soft); margin-top:12px; letter-spacing:.01em}
+  .hero h1 .thin b{font-weight:600}
+  .hero h1 .thin .t-rgbt{color:var(--c-rgbt-ink)} .hero h1 .thin .t-visual{color:var(--c-visual-ink)} .hero h1 .thin .t-drive{color:var(--c-drive-ink)}
+  .hero p.lede{font-size:17.5px; color:var(--ink-soft); max-width:660px; margin:0 0 14px}
+  .hero p.phline{font-size:14px; color:var(--ink-soft); margin:0 0 24px}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin:0 0 34px; padding:0; list-style:none}
+  .chips li{font-size:13px; padding:5px 13px; border:1px solid var(--line); border-radius:999px; background:var(--card); color:var(--ink-soft)}
+  .chips li b{color:var(--accent-ink); font-weight:600}
+  .cta{display:flex; flex-wrap:wrap; gap:12px}
+  .btn{display:inline-flex; align-items:center; gap:8px; padding:12px 22px; border-radius:10px; font-size:15px; text-decoration:none; transition:transform .18s, box-shadow .18s, background .18s}
+  .btn.primary{background:var(--accent); color:#fff; box-shadow:var(--shadow)}
+  .btn.primary:hover{transform:translateY(-2px); box-shadow:var(--shadow-lift)}
+  .btn:active{transform:translateY(0)}
+  .btn.ghost{border:1px solid var(--line); color:var(--ink); background:var(--card)}
+  .btn.ghost:hover{border-color:var(--accent); color:var(--accent-ink); transform:translateY(-2px)}
+
+  /* ---------- stats ---------- */
+  .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:56px 0 8px; animation:rise .7s .1s ease both}
+  .stat{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px 20px; box-shadow:var(--shadow)}
+  .stat .num{font-family:var(--serif); font-size:32px; font-weight:700; line-height:1.1}
+  .stat .lab{font-size:13px; color:var(--ink-soft); margin-top:4px; display:flex; align-items:center; gap:7px}
+  .stat .lab i{width:8px; height:8px; border-radius:50%; display:inline-block; flex:none}
+  .stat.s-rgbt .num{color:var(--c-rgbt-ink)} .stat.s-rgbt .lab i{background:var(--c-rgbt)}
+  .stat.s-visual .num{color:var(--c-visual-ink)} .stat.s-visual .lab i{background:var(--c-visual)}
+  .stat.s-drive .num{color:var(--c-drive-ink)} .stat.s-drive .lab i{background:var(--c-drive)}
+
+  /* ---------- sections & cards ---------- */
+  section{margin-top:64px; animation:rise .7s .18s ease both}
+  .sec-head{display:flex; align-items:baseline; gap:14px; margin-bottom:20px}
+  .sec-head h2{font-family:var(--serif); font-size:26px; margin:0; display:flex; align-items:center; gap:11px}
+  .sec-head h2 i{width:11px; height:11px; border-radius:3.5px; display:inline-block; flex:none}
+  section[data-line="rgbt"] .sec-head h2 i{background:var(--c-rgbt)}
+  section[data-line="visual"] .sec-head h2 i{background:var(--c-visual)}
+  section[data-line="drive"] .sec-head h2 i{background:var(--c-drive)}
+  .sec-head .rule{flex:1; height:1px; background:var(--line)}
+  .sec-head span{font-size:13px; color:var(--ink-soft)}
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+  a.card, .card{
+    display:block; background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:24px 26px; text-decoration:none; color:inherit; box-shadow:var(--shadow);
+    transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease; position:relative; overflow:hidden;
+  }
+  a.card::before{content:""; position:absolute; inset:0 auto 0 0; width:4px; opacity:0; transition:opacity .2s}
+  section[data-line="rgbt"] a.card::before{background:var(--c-rgbt)}
+  section[data-line="visual"] a.card::before{background:var(--c-visual)}
+  section[data-line="drive"] a.card::before{background:var(--c-drive)}
+  a.card:hover{transform:translateY(-4px); box-shadow:var(--shadow-lift)}
+  section[data-line="rgbt"] a.card:hover{border-color:var(--c-rgbt)}
+  section[data-line="visual"] a.card:hover{border-color:var(--c-visual)}
+  section[data-line="drive"] a.card:hover{border-color:var(--c-drive)}
+  a.card:hover::before{opacity:1}
+  .card .tagrow{display:flex; gap:8px; align-items:center; margin-bottom:12px}
+  .pill{font-size:11.5px; font-weight:600; letter-spacing:.06em; padding:3px 10px; border-radius:999px}
+  section[data-line="rgbt"] .pill{background:var(--c-rgbt-soft); color:var(--c-rgbt-ink)}
+  section[data-line="visual"] .pill{background:var(--c-visual-soft); color:var(--c-visual-ink)}
+  section[data-line="drive"] .pill{background:var(--c-drive-soft); color:var(--c-drive-ink)}
+  .pill.grey{background:var(--bg-soft); color:var(--ink-soft)}
+  .card h3{font-family:var(--serif); font-size:21px; margin:0 0 8px}
+  .card p{margin:0; color:var(--ink-soft); font-size:14.5px}
+  .card .go{margin-top:16px; font-size:14px; font-weight:600}
+  section[data-line="rgbt"] .card .go{color:var(--c-rgbt-ink)}
+  section[data-line="visual"] .card .go{color:var(--c-visual-ink)}
+  section[data-line="drive"] .card .go{color:var(--c-drive-ink)}
+  .card.wide{grid-column:1 / -1}
+
+  /* ---------- metro ---------- */
+  .metro{margin-top:18px; width:100%; height:auto; display:block}
+  .metro .ln{stroke-width:5; stroke-linecap:round; fill:none}
+  .metro .ln-pixel{stroke:#8fc1a9} .metro .ln-feature{stroke:var(--c-rgbt)} .metro .ln-decision{stroke:#b7cdc2}
+  [data-theme="dark"] .metro .ln-pixel{stroke:#3d7a5f} [data-theme="dark"] .metro .ln-decision{stroke:#46685a}
+  .metro .st{fill:var(--card); stroke:var(--c-rgbt); stroke-width:2.5}
+  .metro .st-soft{fill:var(--card); stroke:#8fc1a9; stroke-width:2.5}
+  .metro text{font-family:var(--sans); fill:var(--ink)}
+  .metro .t-lab{font-size:14px; font-weight:600}
+  .metro .t-cnt{font-size:12px; fill:var(--ink-soft)}
+  .metro .t-br{font-size:12.5px; fill:var(--ink-soft)}
+  .metro .t-br b{fill:var(--ink)}
+  .routes{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
+  .routes span{font-size:12.5px; border:1px dashed var(--line); border-radius:8px; padding:4px 10px; color:var(--ink-soft)}
+
+  /* ---------- issue index ---------- */
+  .issues{list-style:none; margin:16px 0 0; padding:0}
+  .issues li{border-top:1px solid var(--line)}
+  .issues li:first-child{border-top:none}
+  .issues a{display:flex; align-items:baseline; gap:14px; padding:11px 2px; text-decoration:none; color:inherit; transition:background .15s}
+  .issues a:hover{background:var(--bg-soft)}
+  .issues .no{font-family:var(--serif); font-weight:700; color:var(--c-visual-ink); font-size:15px; min-width:34px}
+  .issues .tt{font-size:14.5px}
+  .issues .tt b{font-weight:600}
+  .issues .vn{margin-left:auto; font-size:12.5px; color:var(--ink-soft); flex:none}
+
+  /* ---------- recent updates ---------- */
+  section.updates{margin-top:44px}
+  section.updates .sec-head h2 i{background:var(--accent)}
+  .updates-list{list-style:none; margin:0; padding:0}
+  .updates-list li{display:flex; align-items:baseline; gap:12px; padding:9px 2px; border-top:1px solid var(--line)}
+  .updates-list li:first-child{border-top:none}
+  .updates-list .u-date{font-family:var(--serif); font-size:13.5px; color:var(--ink-soft); flex:none; min-width:86px}
+  .updates-list .u-dot{width:8px; height:8px; border-radius:50%; display:inline-block; flex:none; position:relative; top:-1px}
+  .updates-list .u-dot.d-rgbt{background:var(--c-rgbt)}
+  .updates-list .u-dot.d-visual{background:var(--c-visual)}
+  .updates-list .u-dot.d-drive{background:var(--c-drive)}
+  .updates-list .u-dot.d-site{background:var(--ink-soft)}
+  .updates-list a{color:inherit; text-decoration:none; font-size:14.5px}
+  .updates-list a:hover{color:var(--accent-ink); text-decoration:underline}
+
+  /* ---------- about ---------- */
+  .about p{font-size:15.5px; color:var(--ink-soft); max-width:720px}
+  .about p b{color:var(--ink)}
+
+  footer{margin:72px 0 8px; padding-top:22px; border-top:1px solid var(--line); color:var(--ink-soft); font-size:13.5px; display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-between}
+  footer a{color:var(--ink-soft); text-decoration:none}
+  footer a:hover{color:var(--accent-ink)}
+
+  @keyframes rise{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+  @media (max-width:680px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .grid{grid-template-columns:1fr}
+    .hero{padding-top:56px}
+    .nav-links a.hideS{display:none}
+    .issues .vn{display:none}
+  }
+</style>
+</head>
+<body>
+<nav id="nav">
+  <div class="nav-in">
+    <a class="brand" href="/"><span class="dots"><i></i><i></i><i></i></span>donxy</a>
+    <div class="nav-links">
+      <a href="/rgbt-notes/">Paper Notes</a>
+      <a href="/figure-teardown/">Figure Teardown</a>
+      <a class="hideS" href="/autonomous-driving-notes/">Driving Notes</a>
+      <a class="hideS" href="https://github.com/donxy" rel="noopener">GitHub</a>
+      <a class="lang-sw lang-go" href="/" data-lang="zh">中文</a>
+      <button id="themeBtn" type="button" aria-label="Toggle dark / light theme" title="Toggle dark / light theme">◐</button>
+    </div>
+  </div>
+</nav>
+<div id="langHint" data-lang="zh"><span>本网站也有中文版。</span> <a class="lang-go" href="/" data-lang="zh">查看中文版 →</a></div>
+
+<main>
+  <div class="hero">
+    <p class="kicker">Personal Site</p>
+    <h1>Research Notes & Visual Teardowns<span class="thin"><b class="t-rgbt">RGBT Object Detection</b> · <b class="t-visual">Research Figures</b> · <b class="t-drive">Autonomous Driving Watch</b></span></h1>
+    <p class="lede">I'm donxy. I work on visible–thermal multimodal object detection, and the question I keep coming back to is: when one modality degrades, goes missing, or turns unreliable, how does a fusion detector stay robust? This page is the front door to three lines I maintain over the long term — paper deep reads, figure teardowns, and autonomous-driving notes — each with its own site, all continuously updated.</p>
+    <p class="phline"><span class="ph">Placeholder: affiliation / lab</span> · <span class="ph">Placeholder: role</span> · <span class="ph">Placeholder: contact email</span></p>
+    <ul class="chips">
+      <li><b>Focus</b> Multimodal Fusion</li>
+      <li>Robustness to Modality Degradation</li>
+      <li>Missing-Modality Learning</li>
+      <li>Quality-Aware Fusion</li>
+      <li>Weak Alignment & UAV Detection</li>
+    </ul>
+    <div class="cta">
+      <a class="btn primary" href="/rgbt-notes/">Enter the Paper Notes Site →</a>
+      <a class="btn ghost" href="https://github.com/donxy" rel="noopener">GitHub Profile</a>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat s-rgbt"><div class="num">102</div><div class="lab"><i></i>paper notes</div></div>
+    <div class="stat s-rgbt"><div class="num">86</div><div class="lab"><i></i>full-text deep reads</div></div>
+    <div class="stat s-visual"><div class="num">5</div><div class="lab"><i></i>figure teardown issues</div></div>
+    <div class="stat s-drive"><div class="num">21</div><div class="lab"><i></i>autonomous-driving notes</div></div>
+  </div>
+
+  <section class="updates">
+    <div class="sec-head"><h2><i></i>Recent Updates</h2><div class="rule"></div><span>最近更新</span></div>
+    <ul class="updates-list">
+          <li><span class="u-date">2026-11-17</span><i class="u-dot d-drive"></i><a href="/en/">New driving note: Evolution of Perception Paradigms — From Object Lists to Occupancy Networks</a></li>
+          <li><span class="u-date">2026-11-17</span><i class="u-dot d-drive"></i><a href="/en/">Driving notes site renamed to Self-Driving Skill Tree (无人驾驶技能树)</a></li>
+          <li><span class="u-date">2026-11-16</span><i class="u-dot d-site"></i><a href="/en/">Homepage redesigned: one portal for the research, visual and observation lines</a></li>
+          <li><span class="u-date">2026-11-12</span><i class="u-dot d-drive"></i><a href="/en/">Driving notes site: a round of UI and count-calibration fixes</a></li>
+          <li><span class="u-date">2026-11-11</span><i class="u-dot d-rgbt"></i><a href="/en/">RGBT notes site migrated to Quartz — 102 notes and the comparison table in place</a></li>
+          <li><span class="u-date">2026-11-10</span><i class="u-dot d-visual"></i><a href="/en/">Figure teardown site: phase-one upgrade completed</a></li>
+    </ul>
+  </section>
+
+  <section data-line="rgbt">
+    <div class="sec-head"><h2><i></i>Research</h2><div class="rule"></div><span>RGBT Object Detection</span></div>
+    <div class="grid">
+      <a class="card" href="/rgbt-notes/">
+        <div class="tagrow"><span class="pill">Live Site</span><span class="pill grey">Continuously Updated</span></div>
+        <h3>RGBT Paper Notes</h3>
+        <p>Structured notes on 102 RGBT object-detection papers (core 74 / appendix 28): organized by technical route, with depth badges (abstract-level / full-text deep read), tag filtering, and a dataset quick reference. Deep-read entries include the main framework figure and a six-section structured note.</p>
+        <div class="go">Open the notes site →</div>
+      </a>
+      <a class="card" href="https://github.com/donxy/awesome-RGBT-ObjectDetection" rel="noopener">
+        <div class="tagrow"><span class="pill">Library</span><span class="pill grey">GitHub</span></div>
+        <h3>awesome-RGBT-ObjectDetection</h3>
+        <p>A general-purpose RGBT object-detection library for the whole field: the catalogue, references, and BibTeX are generated from papers.csv as the single source of truth, with consistency validation — every note on the site traces back to a record in this library.</p>
+        <div class="go">View on GitHub →</div>
+      </a>
+      <div class="card wide">
+        <div class="tagrow"><span class="pill">How the Notes Are Organized</span></div>
+        <h3>Organized by fusion level, not stacked by year</h3>
+        <p>The whole literature is organized along the level at which fusion happens — the “metro map” behind the notes site: each route forms its own line, so which lines are crowded and which are still empty is visible at a glance. Station counts are the paper counts at that level.</p>
+        <svg class="metro" viewBox="0 0 880 216" role="img" aria-label="RGBT literature fusion-level route map">
+          <text class="t-lab" x="0" y="52">Pixel-Level Line</text>
+          <text class="t-cnt" x="0" y="72">7 papers</text>
+          <path class="ln ln-pixel" d="M150 48 H850"/>
+          <circle class="st-soft" cx="240" cy="48" r="6"/><circle class="st-soft" cx="420" cy="48" r="6"/><circle class="st-soft" cx="600" cy="48" r="6"/><circle class="st-soft" cx="780" cy="48" r="6"/>
+          <text class="t-lab" x="0" y="118">Feature-Level Line</text>
+          <text class="t-cnt" x="0" y="138">69 papers</text>
+          <path class="ln ln-feature" d="M150 114 H850"/>
+          <circle class="st" cx="300" cy="114" r="6.5"/><circle class="st" cx="520" cy="114" r="6.5"/><circle class="st" cx="700" cy="114" r="6.5"/>
+          <text class="t-br" x="300" y="94" text-anchor="middle">Attention / Transformer · 19</text>
+          <text class="t-br" x="520" y="94" text-anchor="middle">Dual-Stream CNN / YOLO · 33</text>
+          <text class="t-br" x="700" y="94" text-anchor="middle">Mamba · 6</text>
+          <text class="t-lab" x="0" y="188">Decision-Level Line</text>
+          <text class="t-cnt" x="0" y="208">4 papers</text>
+          <path class="ln ln-decision" d="M150 184 H850"/>
+          <circle class="st-soft" cx="330" cy="184" r="6"/><circle class="st-soft" cx="590" cy="184" r="6"/>
+        </svg>
+        <div class="routes">
+          <span>Surveys & Benchmarks Line</span><span>Feature level · quality-aware branch</span><span>Plus 22 survey & cross-level works not counted in the level lines</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section data-line="visual">
+    <div class="sec-head"><h2><i></i>Visual</h2><div class="rule"></div><span>Figure Teardown</span></div>
+    <div class="grid">
+      <a class="card" href="/figure-teardown/">
+        <div class="tagrow"><span class="pill">Live Site</span><span class="pill grey">Ongoing Series</span></div>
+        <h3>Figure Teardown: Top-Venue Research Figures</h3>
+        <p>Issue by issue, a teardown of the figure design in top-conference and top-journal papers: color systems, layout composition, graphic components, and where the polish comes from — color values sampled from the original figures. Each issue ships with style-reproduction prompts ready for AI image generation, building four libraries: palettes, layouts, components, and prompts.</p>
+        <div class="go">Open the teardown series →</div>
+      </a>
+      <div class="card">
+        <div class="tagrow"><span class="pill">Method</span></div>
+        <h3>Figures only, not methods</h3>
+        <p>Each issue looks only at the first three figures of one paper: get the originals, zoom in and crop, then talk design. Measured color values and dimensions are labelled as measured; design intent is labelled as inferred — guesses never pose as facts, the same discipline as the deep-read notes.</p>
+        <div class="go">5 issues published — index below</div>
+      </div>
+      <div class="card wide">
+        <div class="tagrow"><span class="pill">Published Index</span><span class="pill grey">Issues</span></div>
+        <h3>Teardown Index</h3>
+        <ul class="issues">
+          <li><a href="/figure-teardown/001-urmif.html"><span class="no">001</span><span class="tt">URMIF：粉彩家族编码与双面板阶段流</span><span class="vn">TPAMI 2026</span></a></li>
+          <li><a href="/figure-teardown/002-fusion-mamba.html"><span class="no">002</span><span class="tt">Fusion-Mamba：Office 粉彩色板与双层规格行</span><span class="vn">TMM 2025</span></a></li>
+          <li><a href="/figure-teardown/003-pfgf.html"><span class="no">003</span><span class="tt">PFGF：图节点隐喻与「最深即最重要」</span><span class="vn">CVPR 2025</span></a></li>
+          <li><a href="/figure-teardown/004-ei2det.html"><span class="no">004</span><span class="tt">EI²Det：三带分节、胶囊语言与光照母题</span><span class="vn">TCSVT 2025</span></a></li>
+          <li><a href="/figure-teardown/005-tardal.html"><span class="no">005</span><span class="tt">TarDAL：信息图极繁主义——云朵、苹果与旭日图</span><span class="vn">CVPR 2022</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section data-line="drive">
+    <div class="sec-head"><h2><i></i>Observation</h2><div class="rule"></div><span>Autonomous Driving Notes</span></div>
+    <div class="grid">
+      <a class="card" href="/autonomous-driving-notes/">
+        <div class="tagrow"><span class="pill">Live Site</span><span class="pill grey">Continuously Updated</span></div>
+        <h3>Self-Driving Skill Tree</h3>
+        <p>21 autonomous-driving research notes: from history and technical routes to company competition, regulation, and cost & business models. Key facts are sourced one by one, with verified facts and vendor claims labelled separately.</p>
+        <div class="go">Open the notes site →</div>
+      </a>
+      <div class="card">
+        <div class="tagrow"><span class="pill">Note Map</span></div>
+        <h3>Five sections</h3>
+        <p>Stacked by question, not by company: technology and history first, then companies and the market, and finally regulation and the ledger.</p>
+        <div class="routes">
+          <span>History · 4</span>
+          <span>Technology · 4</span>
+          <span>Industry &amp; Market · 4</span>
+          <span>Companies · 6</span>
+          <span>Safety &amp; Regulation · 3</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="about">
+    <div class="sec-head"><h2>About</h2><div class="rule"></div><span>关于</span></div>
+    <p><span class="ph">Placeholder: one or two sentences of bio — research identity, institution, current project</span> Everything public lives on the three lines above: <b>paper notes</b> that each trace back to a library record, <b>figure teardowns</b> whose color values are all measured, and <b>driving notes</b> whose key facts are sourced one by one.<span class="ph">Placeholder: collaboration / contact note</span></p>
+  </section>
+
+  <footer>
+    <span>© 2026 donxy · Personal Homepage</span>
+    <span><a href="/rgbt-notes/">Paper Notes</a> · <a href="/figure-teardown/">Figure Teardown</a> · <a href="/autonomous-driving-notes/">Driving Notes</a> · <a href="https://github.com/donxy" rel="noopener">github.com/donxy</a></span>
+  </footer>
+</main>
+
+<script>
+  (function(){
+    var root=document.documentElement, nav=document.getElementById('nav');
+    var saved=null; try{ saved=localStorage.getItem('theme'); }catch(e){}
+    var prefersDark=window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    root.setAttribute('data-theme', saved || (prefersDark ? 'dark' : 'light'));
+    document.getElementById('themeBtn').addEventListener('click', function(){
+      var next=root.getAttribute('data-theme')==='dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try{ localStorage.setItem('theme', next); }catch(e){}
+    });
+    window.addEventListener('scroll', function(){
+      nav.classList.toggle('scrolled', window.scrollY > 8);
+    }, {passive:true});
+    // Language preference: remember the manual choice; never force a redirect.
+    // If the remembered (or browser) language is the other one, show a hint bar.
+    var langGo=document.querySelectorAll('.lang-go');
+    for(var i=0;i<langGo.length;i++){
+      langGo[i].addEventListener('click', function(){
+        try{ localStorage.setItem('lang', this.getAttribute('data-lang')); }catch(e){}
+      });
+    }
+    var hint=document.getElementById('langHint');
+    if(hint){
+      var savedLang=null; try{ savedLang=localStorage.getItem('lang'); }catch(e){}
+      var target=hint.getAttribute('data-lang');
+      var cur=(document.documentElement.getAttribute('lang')||'').slice(0,2);
+      var browserEn=/^en/i.test(navigator.language || '');
+      var show=false;
+      if(savedLang){ show = savedLang===target && savedLang!==cur; }
+      else{ show = (target==='en' && browserEn) || (target==='zh' && !browserEn); }
+      if(show) hint.classList.add('show');
+    }
+  })();
+</script>
+</body>
+</html>

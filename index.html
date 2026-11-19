@@ -10,6 +10,9 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://donxy.github.io/" />
 <meta property="og:image" content="https://donxy.github.io/og.png" />
+<link rel="alternate" hreflang="zh" href="https://donxy.github.io/" />
+<link rel="alternate" hreflang="en" href="https://donxy.github.io/en/" />
+<link rel="alternate" hreflang="x-default" href="https://donxy.github.io/" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e5941'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='36' fill='%23faf8f3' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E" />
 <style>
   :root{
@@ -67,6 +70,11 @@
     width:34px; height:34px; border-radius:50%; font-size:15px; line-height:1; display:grid; place-items:center; transition:border-color .2s, transform .2s;
   }
   #themeBtn:hover{border-color:var(--accent); transform:rotate(18deg)}
+  .lang-sw{border:1px solid var(--line); background:var(--card); color:var(--ink-soft); border-radius:999px; padding:5px 13px; font-size:13.5px; text-decoration:none; transition:border-color .2s, color .2s}
+  .lang-sw:hover{border-color:var(--accent); color:var(--accent-ink)}
+  #langHint{display:none; background:var(--accent-soft); color:var(--accent-ink); font-size:13.5px; text-align:center; padding:8px 16px}
+  #langHint.show{display:block}
+  #langHint a{color:var(--accent-ink); font-weight:600}
 
   main{max-width:960px; margin:0 auto; padding:0 24px 40px}
 
@@ -208,10 +216,12 @@
       <a href="/figure-teardown/">配图拆解</a>
       <a class="hideS" href="/autonomous-driving-notes/">自动驾驶</a>
       <a class="hideS" href="https://github.com/donxy" rel="noopener">GitHub</a>
+      <a class="lang-sw lang-go" href="/en/" data-lang="en">EN</a>
       <button id="themeBtn" type="button" aria-label="切换深浅色" title="切换深浅色">◐</button>
     </div>
   </div>
 </nav>
+<div id="langHint" data-lang="en"><span>This site is also available in English.</span> <a class="lang-go" href="/en/" data-lang="en">View in English →</a></div>
 
 <main>
   <div class="hero">
@@ -334,7 +344,7 @@
       </a>
       <div class="card">
         <div class="tagrow"><span class="pill">笔记地图</span></div>
-        <h3>六个分区</h3>
+        <h3>五个分区</h3>
         <p>按问题而不是按公司堆叠：先看技术与历史，再看公司与市场，最后看监管与账本。</p>
         <div class="routes">
           <span>历史 · 4</span>
@@ -372,6 +382,25 @@
     window.addEventListener('scroll', function(){
       nav.classList.toggle('scrolled', window.scrollY > 8);
     }, {passive:true});
+    // Language preference: remember the manual choice; never force a redirect.
+    // If the remembered (or browser) language is the other one, show a hint bar.
+    var langGo=document.querySelectorAll('.lang-go');
+    for(var i=0;i<langGo.length;i++){
+      langGo[i].addEventListener('click', function(){
+        try{ localStorage.setItem('lang', this.getAttribute('data-lang')); }catch(e){}
+      });
+    }
+    var hint=document.getElementById('langHint');
+    if(hint){
+      var savedLang=null; try{ savedLang=localStorage.getItem('lang'); }catch(e){}
+      var target=hint.getAttribute('data-lang');
+      var cur=(document.documentElement.getAttribute('lang')||'').slice(0,2);
+      var browserEn=/^en/i.test(navigator.language || '');
+      var show=false;
+      if(savedLang){ show = savedLang===target && savedLang!==cur; }
+      else{ show = (target==='en' && browserEn) || (target==='zh' && !browserEn); }
+      if(show) hint.classList.add('show');
+    }
   })();
 </script>
 </body>
