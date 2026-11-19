@@ -5,7 +5,7 @@ Sources of truth (numbers are never hand-written in the template):
   - papers.csv            ~/workspace/github-repos/awesome-RGBT-ObjectDetection/papers.csv
   - teardown issues       ~/workspace/figure-teardown/issues.json
   - recent updates        tools/updates.json (editorial log next to this script)
-  - AD notes count/groups ~/workspace/autonomous-driving-notes/quartz/content/
+  - AD notes count/groups ~/workspace/autonomous-driving-notes/repo/content/
                           (same rule as that site's scripts/count-notes.mjs:
                            every .md under content/ except index.md)
 
@@ -18,11 +18,11 @@ HOME = Path.home()
 PAPERS_CSV = HOME / "workspace/github-repos/awesome-RGBT-ObjectDetection/papers.csv"
 ISSUES_JSON = HOME / "workspace/figure-teardown/issues.json"
 UPDATES_JSON = Path(__file__).with_name("updates.json")
-AD_CONTENT = HOME / "workspace/autonomous-driving-notes/quartz/content"
+AD_CONTENT = HOME / "workspace/autonomous-driving-notes/repo/content"
 TEMPLATE = Path(__file__).with_name("index.template.html")
 
-AD_LABELS = [("history", "历史"), ("technology", "技术"), ("companies", "公司"),
-             ("china", "中国市场"), ("regulation", "监管")]
+AD_LABELS = [("history", "历史"), ("technology", "技术"), ("market", "产业与市场"),
+             ("companies", "公司"), ("regulation", "安全与监管")]
 
 
 def papers_stats():
@@ -88,8 +88,6 @@ def ad_stats():
     for key, label in AD_LABELS:
         if key in counts:
             chips.append(f"          <span>{label} · {counts[key]}</span>")
-    if counts.get("timeline"):
-        chips.append(f"          <span>时间线 · {counts['timeline']}</span>")
     return {"AD_COUNT": str(total), "AD_GROUPS": "\n".join(chips)}
 
 
